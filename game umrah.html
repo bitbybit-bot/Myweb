@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game Umrah</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f2f2f2;
+      overflow-x: hidden;
+    }
+    .screen {
+      display: none;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    .active {
+      display: block;
+    }
+    .welcome {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: linear-gradient(to bottom right, #27ae60, #2ecc71);
+      color: white;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .welcome h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+      animation: slideDown 1.5s ease-out;
+    }
+    .welcome p {
+      font-size: 18px;
+      margin-bottom: 20px;
+      animation: fadeIn 2s ease-in;
+    }
+    .welcome button {
+      background: white;
+      color: #27ae60;
+      font-weight: bold;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      animation: bounceIn 1.5s ease-in-out;
+    }
+    .welcome button:hover {
+      background: #ecf0f1;
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      60% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+    .icon {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      opacity: 0.2;
+      animation: float 10s linear infinite;
+    }
+    @keyframes float {
+      from { transform: translateY(100vh); }
+      to { transform: translateY(-100vh); }
+    }
+    #score {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: #2ecc71;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .question button {
+      display: block;
+      margin: 5px 0;
+      padding: 10px;
+      width: 100%;
+      background: #ecf0f1;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .question button:hover {
+      background: #d0ece7;
+    }
+    #resultLevel3 {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="score">Skor: 0</div>
+  <div class="welcome" id="welcomeScreen">
+    <h1>Selamat Datang di Game Umrah</h1>
+    <p>Belajar sambil bermain tentang Ibadah Umrah!</p>
+    <button id="mulaiBtn">Mulai Game</button>
+    <img class="icon" src="https://cdn-icons-png.flaticon.com/512/1995/1995524.png" style="left: 10%; animation-delay: 0s;">
+    <img class="icon" src="https://cdn-icons-png.flaticon.com/512/1995/1995519.png" style="left: 30%; animation-delay: 3s;">
+    <img class="icon" src="https://cdn-icons-png.flaticon.com/512/1995/1995520.png" style="left: 50%; animation-delay: 6s;">
+    <img class="icon" src="https://cdn-icons-png.flaticon.com/512/1995/1995522.png" style="left: 70%; animation-delay: 1.5s;">
+    <img class="icon" src="https://cdn-icons-png.flaticon.com/512/1995/1995521.png" style="left: 90%; animation-delay: 4s;">
+  </div>
+
+  <div id="level1" class="screen">
+    <h2>Level 1: Pilih jawaban yang benar</h2>
+    <div id="level1Questions"></div>
+  </div>
+
+  <div id="level2" class="screen">
+    <h2>Level 2: Urutkan rukun umrah</h2>
+    <div id="pertanyaanLevel2"></div>
+    <ul id="urutkanList"></ul>
+    <button onclick="cekUrutan()">Cek Jawaban</button>
+    <button onclick="lanjutLevel3()">Lanjut ke Level 3</button>
+  </div>
+
+  <div id="level3" class="screen">
+    <h2>Level 3: Pilih jawaban yang benar</h2>
+    <div id="level3Questions"></div>
+    <div id="resultLevel3"></div>
+    <button onclick="location.reload()">Ulangi Permainan</button>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("mulaiBtn").addEventListener("click", mulaiGame);
+    });
+
+    let skor = 0;
+    let level1Index = 0;
+    let level3Index = 0;
+    let benar3 = 0;
+    let salah3 = 0;
+
+    const level1Questions = [
+      { q: "Apa itu umrah?", a: ["Ibadah di Makkah", "Belanja di pasar"], correct: 0 }
+    ];
+
+    const level2Questions = [
+      { q: "Urutkan rukun umrah:", jawab: ["Ihram", "Thawaf", "Sa’i", "Tahallul"] },
+      { q: "Urutkan langkah thawaf:", jawab: ["Niat", "Putaran 7x", "Doa", "Minum zamzam"] },
+      { q: "Urutkan amalan sa’i:", jawab: ["Shafa", "Marwah", "Shafa", "Marwah"] },
+      { q: "Urutkan sebelum miqat:", jawab: ["Mandi", "Niat", "Pakaian ihram", "Masuk Makkah"] },
+      { q: "Setelah tahallul:", jawab: ["Shalat", "Zikir", "Doa", "Istirahat"] }
+    ];
+
+    let level2Index = 0;
+
+    const level3Questions = [
+      { q: "Apa arti thawaf?", a: ["Mengelilingi Ka'bah", "Shalat di masjid"], correct: 0 },
+      { q: "Apa itu sa'i?", a: ["Berjalan antara Shafa dan Marwah", "Makan malam bersama jamaah"], correct: 0 }
+    ];
+
+    function updateSkor(poin) {
+      skor += poin;
+      document.getElementById("score").innerText = "Skor: " + skor;
+    }
+
+    function mulaiGame() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('level1').classList.add('active');
+      tampilPertanyaan1();
+    }
+
+    function tampilPertanyaan1() {
+      if (level1Index >= level1Questions.length) {
+        document.getElementById('level1').classList.remove('active');
+        document.getElementById('level2').classList.add('active');
+        tampilLevel2();
+        return;
+      }
+      const q = level1Questions[level1Index];
+      const div = document.getElementById("level1Questions");
+      div.innerHTML = `<div class='question'><p>${q.q}</p>` +
+        q.a.map((opt, i) => `<button onclick='jawabLevel1(${i === q.correct})'>${opt}</button>`).join('') + '</div>';
+    }
+
+    function jawabLevel1(b) {
+      if (b) updateSkor(10);
+      level1Index++;
+      tampilPertanyaan1();
+    }
+
+    function tampilLevel2() {
+      const q = level2Questions[level2Index];
+      document.getElementById('pertanyaanLevel2').innerText = q.q;
+      const ul = document.getElementById('urutkanList');
+      ul.innerHTML = '';
+      [...q.jawab].sort(() => 0.5 - Math.random()).forEach(text => {
+        const li = document.createElement('li');
+        li.innerText = text;
+        li.draggable = true;
+        li.addEventListener('dragstart', e => dragged = li);
+        li.addEventListener('dragover', e => e.preventDefault());
+        li.addEventListener('drop', e => {
+          e.preventDefault();
+          if (e.target.tagName === 'LI') {
+            const temp = dragged.innerText;
+            dragged.innerText = e.target.innerText;
+            e.target.innerText = temp;
+          }
+        });
+        ul.appendChild(li);
+      });
+    }
+
+    function cekUrutan() {
+      const jawaban = [...document.querySelectorAll('#urutkanList li')].map(li => li.innerText);
+      const kunci = level2Questions[level2Index].jawab;
+      if (JSON.stringify(jawaban) === JSON.stringify(kunci)) {
+        alert("Benar!");
+        updateSkor(10);
+      } else {
+        alert("Salah. Jawaban benar: " + kunci.join(', '));
+      }
+      level2Index++;
+      if (level2Index < level2Questions.length) tampilLevel2();
+      else lanjutLevel3();
+    }
+
+    function lanjutLevel3() {
+      document.getElementById('level2').classList.remove('active');
+      document.getElementById('level3').classList.add('active');
+      tampilPertanyaan3();
+    }
+
+    function tampilPertanyaan3() {
+      if (level3Index >= level3Questions.length) {
+        document.getElementById('level3Questions').innerHTML = '';
+        const totalLevel1 = level1Questions.length;
+        const totalLevel2 = level2Questions.length;
+        const totalLevel3 = level3Questions.length;
+        const totalBenar = skor / 10;
+        const totalSalah = totalLevel1 + totalLevel2 + totalLevel3 - totalBenar;
+        document.getElementById('resultLevel3').innerText = `Jumlah benar: ${totalBenar}, salah: ${totalSalah}`;
+        return;
+        document.getElementById('resultLevel3').innerText = `Jumlah benar: ${benar3}, salah: ${salah3}`;
+        return;
+      }
+      const q = level3Questions[level3Index];
+      const div = document.getElementById("level3Questions");
+      div.innerHTML = `<div class='question'><p>${q.q}</p>` +
+        q.a.map((opt, i) => `<button onclick='jawabLevel3(${i === q.correct})'>${opt}</button>`).join('') + '</div>';
+    }
+
+    function jawabLevel3(b) {
+      if (b) { updateSkor(10); benar3++; } else { salah3++; }
+      level3Index++;
+      tampilPertanyaan3();
+    }
+
+    let dragged;
+  </script>
+</body>
+</html>
