@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Game Umrah</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #f2f2f2; }
+    .screen { display: none; padding: 20px; max-width: 600px; margin: auto; }
+    .active { display: block; }
+    button {
+      background: #2ecc71;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    button:hover { background: #27ae60; }
+    #score {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: #2ecc71;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    ul { list-style: none; padding: 0; }
+    li {
+      background: #ecf0f1;
+      padding: 12px;
+      margin: 6px 0;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    li.selected { background: #ffd54f; }
+  </style>
+</head>
+<body>
+<div id="score">Skor: 0</div>
+
+<div id="level1" class="screen active">
+  <h2>Level 1: Pilih jawaban yang benar</h2>
+  <div id="level1Questions"></div>
+</div>
+
+<div id="level2" class="screen">
+  <h2>Level 2: Urutkan Rukun Umrah</h2>
+  <div id="level2Questions"></div>
+</div>
+
+<div id="level3" class="screen">
+  <h2>Level 3: Pilih jawaban yang benar</h2>
+  <div id="level3Questions"></div>
+</div>
+
+<script>
+let skor = 0;
+let level1Index = 0;
+const level1Questions = [
+  { q: "Apa tujuan utama ibadah umrah?", a: ["Berlibur", "Mendekatkan diri kepada Allah"], correct: 1 },
+  { q: "Pakaian laki-laki saat umrah?", a: ["Ihram", "Jubah"], correct: 0 },
+  { q: "Berapa kali thawaf?", a: ["7", "5"], correct: 0 },
+  { q: "Sa’i dilakukan di antara?", a: ["Safa dan Marwah", "Uhud dan Marwah"], correct: 0 },
+  { q: "Tahallul berarti?", a: ["Memotong rambut", "Mandi besar"], correct: 0 }
+];
+function updateSkor(poin) {
+  skor += poin;
+  document.getElementById("score").innerText = "Skor: " + skor;
+}
+
+function tampilPertanyaan1() {
+  if (level1Index >= level1Questions.length) {
+    document.getElementById('level1').classList.remove('active');
+    document.getElementById('level2').classList.add('active');
+    tampilSoalUrutan();
+    return;
+  }
+  const q = level1Questions[level1Index];
+  const div = document.getElementById("level1Questions");
+  div.innerHTML = `<div><p>${q.q}</p>` +
+    q.a.map((opt, i) => `<button onclick='jawabLevel1(${i === q.correct})'>${opt}</button>`).join('') + '</div>';
+}
+
+function jawabLevel1(benar) {
+  if (benar) updateSkor(10);
+  level1Index++;
+  tampilPertanyaan1();
+}
+
+// === LEVEL 2 MULTI SOAL ===
+const soalUrutan = [
+  { soal: "Urutkan rukun umrah", jawaban: ["Ihram", "Thawaf", "Sa’i", "Tahallul"], acak: ["Sa’i", "Thawaf", "Tahallul", "Ihram"] },
+  { soal: "Urutkan tahapan umrah", jawaban: ["Ihram", "Thawaf", "Sa’i", "Tahallul"], acak: ["Ihram", "Sa’i", "Thawaf", "Tahallul"] },
+  { soal: "Susun urutan dari awal", jawaban: ["Ihram", "Thawaf", "Sa’i", "Tahallul"], acak: ["Thawaf", "Tahallul", "Sa’i", "Ihram"] },
+  { soal: "Tahapan lengkap umrah", jawaban: ["Ihram", "Thawaf", "Sa’i", "Tahallul"], acak: ["Tahallul", "Ihram", "Thawaf", "Sa’i"] },
+  { soal: "Urutan syarat sah umrah", jawaban: ["Ihram", "Thawaf", "Sa’i", "Tahallul"], acak: ["Sa’i", "Ihram", "Tahallul", "Thawaf"] }
+];
+let soalIndex = 0;
+let clickedItem = null;
+
+function tampilSoalUrutan() {
+  if (soalIndex >= soalUrutan.length) {
+    document.getElementById("level2Questions").innerHTML =
+      `<p>Level selesai! Skor saat ini: <b>${skor}</b></p><button onclick="lanjutLevel3()">Lanjut ke Level 3</button>`;
+    return;
+  }
+  const s = soalUrutan[soalIndex];
+  const div = document.getElementById("level2Questions");
+  div.innerHTML = `<p>${s.soal}</p><ul id="urutList">` +
+    s.acak.map(item => `<li>${item}</li>`).join("") +
+    `</ul><button onclick="cekUrutan()">Cek Jawaban</button>`;
+  clickedItem = null;
+
+  document.querySelectorAll("#urutList li").forEach(li => {
+    li.addEventListener("click", () => {
+      if (!clickedItem) {
+        clickedItem = li;
+        li.classList.add("selected");
+      } else if (clickedItem === li) {
+        li.classList.remove("selected");
+        clickedItem = null;
+      } else {
+        const temp = clickedItem.innerText;
+        clickedItem.innerText = li.innerText;
+        li.innerText = temp;
+        clickedItem.classList.remove("selected");
+        clickedItem = null;
+      }
+    });
+  });
+}
+
+function cekUrutan() {
+  const current = Array.from(document.querySelectorAll("#urutList li")).map(li => li.innerText);
+  const benar = soalUrutan[soalIndex].jawaban;
+  if (JSON.stringify(current) === JSON.stringify(benar)) {
+    alert("Jawaban benar!");
+    updateSkor(10);
+  } else {
+    alert("Jawaban salah.");
+  }
+  soalIndex++;
+  tampilSoalUrutan();
+}
+
+function lanjutLevel3() {
+  document.getElementById("level2").classList.remove("active");
+  document.getElementById("level3").classList.add("active");
+  tampilPertanyaan3();
+}
+
+let level3Index = 0;
+const level3Questions = [
+  { q: "Berapa kali sa’i dilakukan?", a: ["7", "5"], correct: 0 },
+  { q: "Apa arti thawaf?", a: ["Mengelilingi Ka'bah", "Doa"], correct: 0 }
+];
+
+function tampilPertanyaan3() {
+  if (level3Index >= level3Questions.length) {
+    document.getElementById("level3Questions").innerHTML = `<p>Permainan selesai! Skor akhir: <b>${skor}</b></p>`;
+    return;
+  }
+  const q = level3Questions[level3Index];
+  const div = document.getElementById("level3Questions");
+  div.innerHTML = `<div><p>${q.q}</p>` +
+    q.a.map((opt, i) => `<button onclick='jawabLevel3(${i === q.correct})'>${opt}</button>`).join('') + '</div>';
+}
+
+function jawabLevel3(benar) {
+  if (benar) updateSkor(10);
+  level3Index++;
+  tampilPertanyaan3();
+}
+
+tampilPertanyaan1();
+</script>
+</body>
+</html>
