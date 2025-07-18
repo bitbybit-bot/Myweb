@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Peta Real-Time Pengguna</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body, #map {
+      height: 100%;
+      margin: 0;
+    }
+    #form {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+  <div id="form">
+    <input type="text" id="username" placeholder="Nama Anda" />
+    <button onclick="startSharing()">Mulai</button>
+  </div>
+  <div id="map"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCZtKi7VBJhOtApbicWEHNwbJSyL10qBxA",
+      authDomain: "peta-realtime.firebaseapp.com",
+      databaseURL: "https://peta-realtime-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "peta-realtime",
+      storageBucket: "peta-realtime.firebasestorage.app",
+      messagingSenderId: "271078504480",
+      appId: "1:271078504480:web:c2c14409b79a26a446a445",
+      measurementId: "G-DYKM5WHVLE"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const map = L.map('map').setView([-6.2, 106.8], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    const markers = {};
+
+    function startSharing() {
+      const name = document.getElementById('username').value.trim();
+      if (!name) return alert("Isi nama dulu!");
+
+      document.getElementById('form').style.display = 'none';
+
+navigator.geolocation.watchPosition(pos => {
+  const lat = pos.coords.latitude;
+  const lng = pos.coords.longitude;
+
+  // update lokasi di Firebase
+  db.ref('users/' + name).set({ name, lat, lng });
+
+  // arahkan peta ke lokasi user
+  map.setView([lat, lng], 17); // zoom bisa disesuaikan
+
+}, err => {
+  alert("Gagal ambil lokasi: " + err.message);
+}, {
+  enableHighAccuracy: true,
+  maximumAge: 10000,
+  timeout: 5000
+});
+      db.ref('users').on('value', snapshot => {
+        const data = snapshot.val();
+        for (let key in data) {
+          const user = data[key];
+          if (markers[key]) {
+            markers[key].setLatLng([user.lat, user.lng]);
+          } else {
+            markers[key] = L.marker([user.lat, user.lng]).addTo(map)
+              .bindPopup(user.name);
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>

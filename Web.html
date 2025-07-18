@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>School Web</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      background: #4a90e2;
+      color: white;
+      width: 100%;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+    }
+    .logo {
+      font-weight: bold;
+      font-size: 24px;
+      background: white;
+      color: #4a90e2;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      line-height: 40px;
+      margin-right: 10px;
+    }
+    .title {
+      font-size: 20px;
+    }
+    main {
+      margin-top: 40px;
+      text-align: center;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      max-width: 500px;
+      border: 2px solid #4a90e2;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 30px;
+      font-size: 18px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">SW</div>
+    <div class="title">School Web</div>
+  </header>
+  <main>
+    <input type="text" id="questionInput" placeholder="Tanyakan sesuatu..." />
+    <br>
+    <button onclick="searchAnswer()">Cari Jawaban</button>
+    <div id="answerBox" class="result"></div>
+  </main>
+
+  <script>
+    // "Database" pertanyaan & jawaban
+    const database = [
+      {
+        question: "apa itu air",
+        answer: "Air adalah zat cair yang sangat penting bagi kehidupan."
+      },
+      {
+        question: "rumus luas segitiga",
+        answer: "Luas = 1/2 × alas × tinggi."
+      },
+      {
+        question: "apa itu haji",
+        answer: "Haji adalah ibadah yang dilakukan di Makkah dan merupakan rukun Islam kelima."
+      },
+      {
+        question: "apa yang kita dapat dari umrah",
+        answer: "Umrah memberikan pahala, pengampunan dosa, dan mendekatkan diri kepada Allah."
+      },
+      {
+        question: "apa kegunaan akar",
+        answer: "Akar digunakan untuk mencari nilai yang jika dikuadratkan menghasilkan angka tertentu."
+      }
+    ];
+
+    function searchAnswer() {
+      const input = document.getElementById("questionInput").value.toLowerCase().trim();
+      const answerBox = document.getElementById("answerBox");
+
+      const result = database.find(item => input.includes(item.question));
+      if (result) {
+        answerBox.innerText = result.answer;
+      } else {
+        answerBox.innerText = "Maaf, jawaban tidak ditemukan.";
+      }
+    }
+  </script>
+</body>
+</html>
