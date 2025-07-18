@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Peta Real-Time & Chat</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body, #map {
+      height: 100%;
+      margin: 0;
+    }
+    #form {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    #stats {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    #chatBox {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 250px;
+      max-height: 300px;
+      overflow-y: auto;
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      z-index: 1000;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    #messages {
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+    #chatInput {
+      width: calc(100% - 60px);
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+  <div id="form">
+    <input type="text" id="username" placeholder="Nama Anda" />
+    <button onclick="startSharing()">Mulai</button>
+    <div id="stats">
+      <strong>Pengguna Aktif:</strong>
+      <ul id="userList" style="margin:0;padding-left: 20px;"></ul>
+    </div>
+  </div>
+
+  <div id="chatBox">
+    <div id="messages"></div>
+    <input type="text" id="chatInput" placeholder="Ketik pesan..." />
+    <button onclick="kirimPesan()">Kirim</button>
+  </div>
+
+  <div id="map"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCZtKi7VBJhOtApbicWEHNwbJSyL10qBxA",
+      authDomain: "peta-realtime.firebaseapp.com",
+      databaseURL: "https://peta-realtime-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "peta-realtime",
+      storageBucket: "peta-realtime.firebasestorage.app",
+      messagingSenderId: "271078504480",
+      appId: "1:271078504480:web:c2c14409b79a26a446a445",
+      measurementId: "G-DYKM5WHVLE"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const map = L.map('map', { zoomControl: false }).setView([-6.2, 106.8], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    const markers = {}, paths = {};
+    let userId = "", userName = "";
+    let pathPoints = [];
+
+    function getColorFromName(name) {
+      let hash = 0;
+      for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+      return "#" + "000000".substring(0, 6 - c.length) + c;
+    }
+
+    function startSharing() {
+      userName = document.getElementById('username').value.trim();
+      if (!userName) return alert("Isi nama dulu!");
+      userId = userName + "_" + Date.now();
+      document.getElementById('form').style.display = 'none';
+
+      navigator.geolocation.watchPosition(pos => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        pathPoints.push([lat, lng]);
+        db.ref('users/' + userId).set({ name: userName, lat, lng, timestamp: Date.now(), path: pathPoints });
+      }, err => {
+        alert("Gagal ambil lokasi: " + err.message);
+      }, {
+        enableHighAccuracy: true,
+        maximumAge: 10000,
+        timeout: 5000
+      });
+    }
+
+    function refreshMarkers() {
+      db.ref('users').once('value').then(snapshot => {
+        const data = snapshot.val();
+        const now = Date.now();
+        const activePositions = [];
+        const userSet = new Set();
+        let currentUserStillActive = false;
+
+        for (let key in markers) {
+          if (!data || !data[key] || now - data[key].timestamp > 60000) {
+            map.removeLayer(markers[key]);
+            delete markers[key];
+            if (paths[key]) {
+              map.removeLayer(paths[key]);
+              delete paths[key];
+            }
+          }
+        }
+
+        if (!data) return;
+        for (let key in data) {
+          const user = data[key];
+          if (!user.timestamp || now - user.timestamp > 60000) continue;
+          activePositions.push([user.lat, user.lng]);
+          userSet.add(user.name);
+          if (key === userId) currentUserStillActive = true;
+
+          const color = getColorFromName(user.name);
+          if (markers[key]) {
+            markers[key].setLatLng([user.lat, user.lng]);
+          } else {
+            const marker = L.marker([user.lat, user.lng]).addTo(map);
+            marker.bindPopup(`<b style="color:${color}">${user.name}</b><br><button onclick="keluar('${key}')">Keluar</button>`);
+            markers[key] = marker;
+          }
+
+          if (user.path && user.path.length > 1) {
+            paths[key] = L.polyline(user.path, { color, weight: 3 }).addTo(map);
+          }
+        }
+
+        if (!currentUserStillActive) {
+          document.getElementById('form').style.display = 'block';
+        }
+
+        if (activePositions.length > 0) {
+          const bounds = L.latLngBounds(activePositions);
+          map.fitBounds(bounds, { padding: [50, 50] });
+        }
+
+        const userList = document.getElementById("userList");
+        userList.innerHTML = "";
+        userSet.forEach(name => {
+          const li = document.createElement("li");
+          li.textContent = name;
+          userList.appendChild(li);
+        });
+      });
+    }
+
+    function keluar(key) {
+      if (confirm("Keluar dari peta?")) {
+        db.ref('users/' + key).remove();
+      }
+    }
+
+    function kirimPesan() {
+      const pesan = document.getElementById('chatInput').value.trim();
+      if (pesan) {
+        db.ref('chat').push({
+          name: userName,
+          message: pesan,
+          timestamp: Date.now()
+        });
+        document.getElementById('chatInput').value = "";
+      }
+    }
+
+    function loadChat() {
+      db.ref('chat').limitToLast(100).on('value', snapshot => {
+        const msgDiv = document.getElementById('messages');
+        msgDiv.innerHTML = '';
+        snapshot.forEach(child => {
+          const data = child.val();
+          const p = document.createElement('p');
+          p.innerHTML = `<strong>${data.name}:</strong> ${data.message}`;
+          msgDiv.appendChild(p);
+        });
+        msgDiv.scrollTop = msgDiv.scrollHeight;
+      });
+    }
+
+    setInterval(refreshMarkers, 3000);
+    loadChat();
+  </script>
+</body>
+</html>

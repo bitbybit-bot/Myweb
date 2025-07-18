@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Game Tebak Angka dengan Petunjuk Terbatas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e6f2ff;
+      text-align: center;
+      padding-top: 80px;
+    }
+
+    .game-container {
+      background-color: white;
+      width: 320px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+
+    input[type=number] {
+      width: 80px;
+      padding: 10px;
+      font-size: 18px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+      background-color: #3399ff;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover:enabled {
+      background-color: #267acc;
+    }
+
+    button:disabled {
+      background-color: #999999;
+      cursor: not-allowed;
+    }
+
+    #message, #hint {
+      font-size: 16px;
+      margin-top: 15px;
+      min-height: 24px;
+    }
+
+    #score, #lives, #hintsLeft {
+      font-weight: bold;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Game Tebak Angka!</h1>
+    <p>Tebak angka antara 1 dan 10</p>
+    <input type="number" id="guessInput" min="1" max="10" />
+    <div>
+      <button onclick="checkGuess()">Tebak</button>
+      <button id="hintBtn" onclick="showHint()">Petunjuk (3)</button>
+    </div>
+    <p id="message"></p>
+    <p id="hint"></p>
+    <p>Skor: <span id="score">0</span> | Nyawa: <span id="lives">3</span> | Petunjuk tersisa: <span id="hintsLeft">3</span></p>
+    <button onclick="resetGame()">Main Lagi</button>
+  </div>
+
+  <script>
+    let numberToGuess = Math.floor(Math.random() * 10) + 1;
+    let lives = 3;
+    let score = 0;
+    let hintsRemaining = 3;
+
+    function checkGuess() {
+      const input = document.getElementById("guessInput");
+      const userGuess = parseInt(input.value);
+      const message = document.getElementById("message");
+      const hint = document.getElementById("hint");
+      const hintBtn = document.getElementById("hintBtn");
+
+      if (lives <= 0) {
+        message.textContent = "Game sudah selesai! Klik 'Main Lagi' untuk mulai ulang.";
+        message.style.color = "red";
+        return;
+      }
+
+      if (isNaN(userGuess) || userGuess < 1 || userGuess > 10) {
+        message.textContent = "Masukkan angka valid antara 1 dan 10!";
+        message.style.color = "orange";
+        return;
+      }
+
+      if (userGuess === numberToGuess) {
+        score++;
+        message.textContent = "Selamat! Tebakan kamu benar!";
+        message.style.color = "green";
+        scoreUpdate();
+        resetRound();
+      } else {
+        lives--;
+        message.textContent = "Salah! Coba lagi.";
+        message.style.color = "red";
+        livesUpdate();
+        hint.textContent = "";
+        if (lives === 0) {
+          message.textContent = "Kamu kehabisan nyawa! Jawabannya adalah: " + numberToGuess;
+          message.style.color = "red";
+          hintBtn.disabled = true;
+        }
+      }
+
+      input.value = "";
+    }
+
+    function showHint() {
+      const hint = document.getElementById("hint");
+      const hintBtn = document.getElementById("hintBtn");
+
+      if (lives <= 0) {
+        hint.textContent = "Game sudah selesai, tidak ada petunjuk lagi.";
+        return;
+      }
+
+      if (hintsRemaining <= 0) {
+        hint.textContent = "Petunjuk sudah habis!";
+        hintBtn.disabled = true;
+        return;
+      }
+
+      let hints = [];
+
+      if (numberToGuess > 1) {
+        const smallerNum = Math.floor(Math.random() * (numberToGuess - 1)) + 1;
+        hints.push("Angka ini lebih besar dari " + smallerNum + ".");
+      }
+
+      if (numberToGuess < 10) {
+        const biggerNum = Math.floor(Math.random() * (10 - numberToGuess)) + numberToGuess + 1;
+        hints.push("Angka ini lebih kecil dari " + biggerNum + ".");
+      }
+
+      if (numberToGuess % 2 === 0) {
+        hints.push("Angka ini genap.");
+      } else {
+        hints.push("Angka ini ganjil.");
+      }
+
+      const randomIndex = Math.floor(Math.random() * hints.length);
+      hint.textContent = "Petunjuk: " + hints[randomIndex];
+
+      hintsRemaining--;
+      updateHintsLeft();
+
+      if (hintsRemaining === 0) {
+        hintBtn.disabled = true;
+      }
+    }
+
+    function resetRound() {
+      numberToGuess = Math.floor(Math.random() * 10) + 1;
+      lives = 3;
+      hintsRemaining = 3;
+      livesUpdate();
+      scoreUpdate();
+      updateHintsLeft();
+      document.getElementById("hint").textContent = "";
+      document.getElementById("message").textContent = "";
+      document.getElementById("hintBtn").disabled = false;
+    }
+
+    function resetGame() {
+      score = 0;
+      lives = 3;
+      hintsRemaining = 3;
+      scoreUpdate();
+      livesUpdate();
+      updateHintsLeft();
+      numberToGuess = Math.floor(Math.random() * 10) + 1;
+      document.getElementById("message").textContent = "";
+      document.getElementById("hint").textContent = "";
+      document.getElementById("guessInput").value = "";
+      document.getElementById("hintBtn").disabled = false;
+      document.getElementById("hintBtn").textContent = "Petunjuk (3)";
+    }
+
+    function scoreUpdate() {
+      document.getElementById("score").textContent = score;
+    }
+
+    function livesUpdate() {
+      document.getElementById("lives").textContent = lives;
+    }
+
+    function updateHintsLeft() {
+      document.getElementById("hintsLeft").textContent = hintsRemaining;
+      document.getElementById("hintBtn").textContent = `Petunjuk (${hintsRemaining})`;
+    }
+  </script>
+</body>
+</html>
