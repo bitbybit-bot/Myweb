@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Jadwal Sholat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin: 20px auto;
+    }
+    h1, h2 {
+      text-align: center;
+      margin: 10px 0;
+    }
+    .subinfo {
+      text-align: center;
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    ul {
+      padding-left: 20px;
+      font-size: 16px;
+    }
+    li {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Jadwal Sholat</h1>
+    <select id="citySelect">
+      <option value="Praya">Praya</option>
+      <option value="Mataram">Mataram</option>
+      <option value="Surabaya">Surabaya</option>
+      <option value="Madinah">Madinah</option>
+      <option value="Makkah">Makkah</option>
+    </select>
+    <h2 id="cityTitle">Praya</h2>
+    <div class="subinfo" id="localTime"></div>
+    <div class="subinfo" id="cityTime"></div>
+    <div class="subinfo" id="dateInfo"></div>
+    <ul id="jadwal"></ul>
+  </div>
+
+  <script>
+    const prayerNames = {
+      Fajr: "Subuh",
+      Dhuhr: "Dzuhur",
+      Asr: "Ashar",
+      Maghrib: "Maghrib",
+      Isha: "Isya"
+    };
+
+    let currentTimezone = "Asia/Makassar"; // default
+    let clockInterval;
+
+    async function loadPrayerTimes(city) {
+      let country = "Indonesia";
+      if (city === "Madinah" || city === "Makkah") country = "Saudi Arabia";
+
+      const url = `https://api.aladhan.com/v1/timingsByCity?city=${city}&country=${country}&method=2`;
+      const res = await fetch(url);
+      const data = await res.json();
+      return data.data;
+    }
+
+    // Tampilkan jam realtime: lokal HP dan kota terpilih
+    function showClocks(timezone) {
+      if (clockInterval) clearInterval(clockInterval);
+
+      function updateClock() {
+        const now = new Date();
+
+        // Jam lokal HP
+        const localOptions = {
+          hour: '2-digit', minute: '2-digit', second: '2-digit',
+          hour12: false
+        };
+        const localTime = new Intl.DateTimeFormat('id-ID', localOptions).format(now);
+        document.getElementById("localTime").innerText = `🕒 Waktu Lokal (HP): ${localTime}`;
+
+        // Jam kota terpilih
+        const cityOptions = {
+          timeZone: timezone,
+          hour: '2-digit', minute: '2-digit', second: '2-digit',
+          hour12: false
+        };
+        const cityTime = new Intl.DateTimeFormat('id-ID', cityOptions).format(now);
+        document.getElementById("cityTime").innerText = `🕒 Waktu ${document.getElementById("cityTitle").innerText}: ${cityTime}`;
+      }
+
+      updateClock();
+      clockInterval = setInterval(updateClock, 1000);
+    }
+
+    async function showPrayerTimes(city) {
+      document.getElementById("cityTitle").innerText = city;
+      const data = await loadPrayerTimes(city);
+      const jadwal = data.timings;
+
+      currentTimezone = data.meta.timezone;
+      showClocks(currentTimezone);
+
+      // Tanggal Hijriah + Masehi
+      const dateHijri = data.date.hijri.day + " " + data.date.hijri.month.en + " " + data.date.hijri.year;
+      const dateGregorian = data.date.gregorian.day + " " + data.date.gregorian.month.en + " " + data.date.gregorian.year;
+      document.getElementById("dateInfo").innerText = `${dateGregorian} / ${dateHijri} H`;
+
+      // Jadwal sholat
+      let html = "";
+      for (let key in prayerNames) {
+        html += `<li>${prayerNames[key]}: ${jadwal[key]}</li>`;
+      }
+      document.getElementById("jadwal").innerHTML = html;
+    }
+
+    document.getElementById("citySelect").addEventListener("change", function() {
+      showPrayerTimes(this.value);
+    });
+
+    // Default tampil Praya
+    showPrayerTimes("Praya");
+  </script>
+</body>
+</html>
