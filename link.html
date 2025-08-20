@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LINK</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .search-container {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    .search-container input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 60%;
+    }
+    ul {
+      list-style: decimal;
+      padding-left: 20px;
+    }
+    li {
+      padding: 5px;
+      cursor: pointer;
+    }
+    a {
+      text-decoration: none;
+      color: #007bff;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .add-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 15px;
+      border: none;
+      border-radius: 50%;
+      background: #28a745;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .modal-content input {
+      width: 93%;
+      margin: 5px 0;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .modal-content button {
+      margin-top: 10px;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      background: #28a745;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .modal-content button:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+  <button class="add-btn" onclick="openModal()">＋</button>
+  <div class="search-container">
+    <input type="text" id="search" placeholder="Cari link...">
+  </div>
+
+  <ul id="linkList"></ul>
+
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h3>Tambah Link</h3>
+      <input type="text" id="title" placeholder="Judul Link">
+      <input type="text" id="url" placeholder="URL (https://...)">
+      <button onclick="addLink()">Simpan</button>
+    </div>
+  </div>
+
+  <script>
+    let links = JSON.parse(localStorage.getItem("links")) || [];
+    const linkList = document.getElementById("linkList");
+    const modal = document.getElementById("modal");
+
+    function saveData() {
+      localStorage.setItem("links", JSON.stringify(links));
+    }
+
+    function renderLinks(filter = "") {
+      linkList.innerHTML = "";
+      links.filter(l => l.title.toLowerCase().includes(filter.toLowerCase())).forEach((link, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="${link.url}" target="_blank">${link.title}</a>`;
+
+        // Tekan lama untuk hapus
+        let pressTimer;
+        li.addEventListener("mousedown", () => {
+          pressTimer = setTimeout(() => {
+            if (confirm("Hapus link ini?")) {
+              links.splice(index, 1);
+              saveData();
+              renderLinks(filter);
+            }
+          }, 800);
+        });
+        li.addEventListener("mouseup", () => clearTimeout(pressTimer));
+        li.addEventListener("mouseleave", () => clearTimeout(pressTimer));
+
+        linkList.appendChild(li);
+      });
+    }
+
+    function addLink() {
+      const title = document.getElementById("title").value.trim();
+      const url = document.getElementById("url").value.trim();
+
+      if (!title || !url) {
+        alert("Judul dan URL wajib diisi!");
+        return;
+      }
+
+      links.push({ title, url });
+      saveData();
+      closeModal();
+      renderLinks();
+    }
+
+    function openModal() {
+      modal.style.display = "flex";
+    }
+    function closeModal() {
+      modal.style.display = "none";
+      document.getElementById("title").value = "";
+      document.getElementById("url").value = "";
+    }
+
+    window.onclick = function(event) {
+      if (event.target === modal) closeModal();
+    }
+
+    document.getElementById("search").addEventListener("input", e => {
+      renderLinks(e.target.value);
+    });
+
+    renderLinks();
+  </script>
+</body>
+</html>
