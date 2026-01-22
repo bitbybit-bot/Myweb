@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jadwal Sholat</title>
+
+<style>
+:root{
+  --primary:#0d6efd;
+  --card:#fff;
+}
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Segoe UI,Arial,sans-serif;
+  background:linear-gradient(135deg,#4facfe,#00f2fe);
+  min-height:100vh;
+  padding:16px;
+}
+
+.card{
+  width:100%;
+  max-width:420px;
+  background:var(--card);
+  padding:18px;
+  border-radius:18px;
+  box-shadow:0 10px 25px rgba(0,0,0,.15);
+  margin:0 auto; /* penting: tidak terpotong */
+}
+
+h1,h2{text-align:center;margin:6px 0}
+h1{font-size:22px}
+h2{font-size:17px}
+
+.subinfo{
+  text-align:center;
+  font-size:13px;
+  color:#555;
+}
+
+.date{
+  text-align:center;
+  font-size:13px;
+  font-weight:500;
+  margin:4px 0 6px;
+  white-space:nowrap;   /* 🔑 supaya 1 baris */
+}
+
+select{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  margin:10px 0;
+  font-size:15px;
+}
+
+.day-nav{
+  display:flex;
+  justify-content:space-around;
+  margin:12px 0;
+}
+.day-nav div{
+  padding:6px 14px;
+  border-radius:20px;
+  background:#e9ecef;
+  font-size:13px;
+  cursor:pointer;
+}
+.day-nav .active{
+  background:var(--primary);
+  color:#fff;
+}
+
+.countdown{
+  background:var(--primary);
+  color:#fff;
+  padding:12px;
+  border-radius:12px;
+  text-align:center;
+  margin:12px 0;
+  font-size:14px;
+}
+
+.progress{
+  height:8px;
+  background:#e0e0e0;
+  border-radius:10px;
+  overflow:hidden;
+}
+.bar{
+  height:100%;
+  width:0%;
+  background:#4caf50;
+  transition:.4s linear;
+}
+
+ul{
+  list-style:none;
+  padding:0;
+  margin-top:12px;
+}
+li{
+  display:flex;
+  justify-content:space-between;
+  padding:12px;
+  margin-bottom:8px;
+  border-radius:12px;
+  background:#f3f6fb;
+}
+li.active{
+  background:#ffe082;
+  font-weight:600;
+}
+
+@media (min-width:768px){
+  .card{max-width:480px}
+}
+</style>
+</head>
+
+<body>
+<div class="card" id="swipeArea">
+  <h1>🕌 Jadwal Sholat</h1>
+
+  <select id="citySelect">
+    <option>Praya</option>
+    <option>Mataram</option>
+    <option>Surabaya</option>
+    <option>Makkah</option>
+    <option>Madinah</option>
+  </select>
+
+  <h2 id="cityTitle">Praya</h2>
+  <div class="date" id="dateInfo"></div>
+  <div class="subinfo" id="localTime"></div>
+  <div class="subinfo" id="cityTime"></div>
+
+  <div class="day-nav">
+    <div data-day="0" class="active">Hari ini</div>
+    <div data-day="1">Besok</div>
+    <div data-day="2">Lusa</div>
+  </div>
+
+  <div class="countdown" id="countdown">⏳ Memuat...</div>
+  <div class="progress"><div class="bar" id="progressBar"></div></div>
+
+  <ul id="jadwal"></ul>
+</div>
+
+<script>
+const prayerNames={
+  Fajr:"Subuh",Dhuhr:"Dzuhur",Asr:"Ashar",
+  Maghrib:"Maghrib",Isha:"Isya"
+};
+
+let baseData={},timezone="",dayOffset=0;
+let startTime,endTime,nextPrayer="",interval;
+
+function bulanID(en){
+  return {
+    January:"Januari",February:"Februari",March:"Maret",April:"April",
+    May:"Mei",June:"Juni",July:"Juli",August:"Agustus",
+    September:"September",October:"Oktober",November:"November",December:"Desember"
+  }[en]||en;
+}
+
+function formatTanggal(g,h){
+  return `${g.day} ${bulanID(g.month.en)} ${g.year} / ${h.day} ${h.month.en} ${h.year} H`;
+}
+
+async function fetchData(){
+  let date=new Date();
+  date.setDate(date.getDate()+dayOffset);
+  let d=date.getDate(),m=date.getMonth()+1,y=date.getFullYear();
+
+  let country="Indonesia";
+  if(citySelect.value==="Makkah"||citySelect.value==="Madinah") country="Saudi Arabia";
+
+  const res=await fetch(
+    `https://api.aladhan.com/v1/timingsByCity/${d}-${m}-${y}?city=${citySelect.value}&country=${country}&method=2`
+  );
+  const data=(await res.json()).data;
+
+  timezone=data.meta.timezone;
+  baseData.timings=data.timings;
+  dateInfo.innerText=formatTanggal(data.date.gregorian,data.date.hijri);
+
+  jadwal.innerHTML="";
+  for(let k in prayerNames){
+    jadwal.innerHTML+=`
+      <li id="${k}">
+        <span>${prayerNames[k]}</span>
+        <strong>${data.timings[k]}</strong>
+      </li>`;
+  }
+
+  clearInterval(interval);
+  if(dayOffset===0){
+    updateCountdown();
+    interval=setInterval(updateCountdown,1000);
+  }else{
+    countdown.innerText="⏳ Countdown hanya untuk hari ini";
+    progressBar.style.width="0%";
+  }
+}
+
+function updateCountdown(){
+  const now=new Date(
+    new Date().toLocaleString("en-US",{timeZone:timezone})
+  );
+
+  for(let k in prayerNames){
+    let [h,m]=baseData.timings[k].split(":");
+    let t=new Date(now); t.setHours(h,m,0,0);
+    if(t>now){ nextPrayer=k; startTime=startTime||now; endTime=t; break; }
+  }
+
+  let diff=Math.floor((endTime-now)/1000);
+  let total=(endTime-startTime)/1000;
+  progressBar.style.width=(100-diff/total*100)+"%";
+
+  countdown.innerText=
+    `⏳ Menuju ${prayerNames[nextPrayer]}: `+
+    new Date(diff*1000).toISOString().substr(11,8);
+
+  document.querySelectorAll("li").forEach(li=>li.classList.remove("active"));
+  document.getElementById(nextPrayer)?.classList.add("active");
+}
+
+function showClock(){
+  setInterval(()=>{
+    const now=new Date();
+    localTime.innerText="🕒 Lokal: "+now.toLocaleTimeString("id-ID");
+    cityTime.innerText="🕒 Kota: "+
+      now.toLocaleTimeString("id-ID",{timeZone:timezone});
+  },1000);
+}
+
+document.querySelectorAll(".day-nav div").forEach(d=>{
+  d.onclick=()=>{
+    document.querySelectorAll(".day-nav div").forEach(x=>x.classList.remove("active"));
+    d.classList.add("active");
+    dayOffset=+d.dataset.day;
+    startTime=null;
+    fetchData();
+  };
+});
+
+let xStart=0;
+swipeArea.addEventListener("touchstart",e=>xStart=e.touches[0].clientX);
+swipeArea.addEventListener("touchend",e=>{
+  let diff=e.changedTouches[0].clientX-xStart;
+  if(diff>50 && dayOffset>0) dayOffset--;
+  if(diff<-50 && dayOffset<2) dayOffset++;
+  document.querySelector(`.day-nav div[data-day="${dayOffset}"]`).click();
+});
+
+citySelect.onchange=()=>{
+  cityTitle.innerText=citySelect.value;
+  dayOffset=0;
+  document.querySelector('[data-day="0"]').click();
+};
+
+showClock();
+fetchData();
+</script>
+</body>
+</html>
