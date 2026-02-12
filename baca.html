@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cerita Pendek</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins&family=Lora&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<style>
+body{margin:0;font-family:Poppins;background:#f4f6fb}
+header{background:#fff;padding:1px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.view{display:none;padding:16px}
+.view.active{display:block}
+.card{background:#fff;padding:16px;border-radius:16px;margin-bottom:14px;
+box-shadow:0 6px 16px rgba(0,0,0,.08);cursor:pointer}
+.card h3{margin:0}
+.meta{font-size:12px;color:#777;margin-top:6px}
+.badge{float:right;background:#5b7cfa;color:#fff;border-radius:999px;padding:4px 8px;font-size:12px}
+.read{font-family:Lora;line-height:1.7}
+.actions{display:flex;gap:10px;margin:16px 0}
+.btn{border:none;border-radius:12px;padding:10px 14px;font-weight:600}
+.like{background:#ffe5ea}
+.commentBox{background:#fff;padding:10px 12px;border-radius:12px;margin-top:10px}
+.commentBox small{color:#777}
+input,textarea{width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ddd}
+textarea{min-height:120px}
+.fab{position:fixed;right:20px;bottom:50px;width:56px;height:56px;
+border-radius:50%;font-size:28px;background:#5b7cfa;color:#fff;border:none}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>📖 Cerita Pendek</h2>
+  <small>Baca • Like • Komentar</small>
+</header>
+
+<!-- LIST -->
+<div class="view active" id="listView">
+  <div id="list"></div>
+</div>
+
+<!-- UPLOAD -->
+<div class="view" id="uploadView">
+  <button class="btn" onclick="showList()">← Kembali</button>
+  <h3>✍️ Unggah Cerita</h3>
+  <input id="title" placeholder="Judul">
+  <input id="author" placeholder="Penulis">
+  <textarea id="content" placeholder="Tulis cerita..."></textarea>
+  <button class="btn" onclick="saveStory()">Terbitkan</button>
+</div>
+
+<!-- READ -->
+<div class="view read" id="readView">
+  <button class="btn" onclick="showList()">← Kembali</button>
+
+  <h1 id="rTitle"></h1>
+  <div class="meta" id="rMeta"></div>
+  <p id="rContent"></p>
+
+<div class="actions">
+  <button class="btn like" id="likeBtn" onclick="toggleLike()">
+    ❤️ <span id="likeCount">0</span>
+  </button>
+  <button class="btn" onclick="toggleCommentForm()">💬 Komentar</button>
+  <button class="btn" style="background:#e74c3c;color:#fff"
+    onclick="deleteStory()">🗑 Hapus Cerpen</button>
+</div>
+
+  <div id="commentForm" style="display:none">
+    <input id="cName" placeholder="Nama (opsional)">
+    <textarea id="cText" placeholder="Tulis komentar..."></textarea>
+    <button class="btn" onclick="addComment()">Kirim</button>
+  </div>
+
+  <div id="comments"></div>
+</div>
+
+<button class="fab" onclick="showUpload()">＋</button>
+
+<script>
+/* 🔥 FIREBASE CONFIG */
+const firebaseConfig = {
+  apiKey: "AIzaSyB0RtZKmibMaTiA3b9f55Fg0FVzc1Y50lE",
+  authDomain: "cerita-ad71a.firebaseapp.com",
+  databaseURL: "https://cerita-ad71a-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "cerita-ad71a",
+  storageBucket: "cerita-ad71a.firebasestorage.app",
+  messagingSenderId: "732092084838",
+  appId: "1:732092084838:web:541fd17ce2c89d1110b3a7",
+  measurementId: "G-8ZE8SBKLMZ"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database().ref("stories");
+
+/* VIEW */
+const listView=lv=document.getElementById("listView");
+const uploadView=uv=document.getElementById("uploadView");
+const readView=rv=document.getElementById("readView");
+const list=document.getElementById("list");
+const commentsDiv=document.getElementById("comments");
+let currentStoryId=null;
+
+const show=v=>[lv,uv,rv].forEach(x=>x.classList.remove("active"))||v.classList.add("active");
+const showList=()=>show(lv);
+const showUpload=()=>show(uv);
+
+/* LIST */
+db.on("value",snap=>{
+  list.innerHTML="";
+  snap.forEach(c=>{
+    const s=c.val();
+    const cc=s.comments?Object.keys(s.comments).length:0;
+    const div=document.createElement("div");
+    div.className="card";
+    div.onclick=()=>readStory(c.key,s);
+    div.innerHTML=`
+      ${cc?`<span class="badge">💬 ${cc}</span>`:""}
+      <h3>${s.title}</h3>
+      <div class="meta">✍️ ${s.author} • ${new Date(s.time).toLocaleString()}</div>
+    `;
+    list.prepend(div);
+  });
+});
+
+/* SAVE */
+function saveStory(){
+  if(!title.value||!content.value) return alert("Judul & cerita wajib");
+  db.push({
+    title:title.value,
+    author:author.value||"Anonim",
+    content:content.value,
+    time:Date.now(),
+    likes:0
+  });
+  title.value=author.value=content.value="";
+  showList();
+}
+
+/* READ */
+let likedStories=JSON.parse(localStorage.getItem("likedStories")||"{}");
+
+function readStory(id,s){
+  currentStoryId=id;
+  rTitle.innerText=s.title;
+  rMeta.innerText=`✍️ ${s.author} • ${new Date(s.time).toLocaleString()}`;
+  rContent.innerText=s.content;
+  loadLikes();
+  loadComments();
+  show(rv);
+}
+
+/* LIKE REALTIME + TOGGLE */
+function toggleLike(){
+  const ref=db.child(currentStoryId).child("likes");
+  if(likedStories[currentStoryId]){
+    ref.transaction(v=>Math.max((v||1)-1,0));
+    delete likedStories[currentStoryId];
+  }else{
+    ref.transaction(v=>(v||0)+1);
+    likedStories[currentStoryId]=true;
+  }
+  localStorage.setItem("likedStories",JSON.stringify(likedStories));
+  updateLikeBtn();
+}
+
+function loadLikes(){
+  db.child(currentStoryId).child("likes").on("value",s=>{
+    likeCount.innerText=s.val()||0;
+  });
+  updateLikeBtn();
+}
+
+function updateLikeBtn(){
+  likeBtn.style.background=likedStories[currentStoryId]?"#ffb3c1":"#ffe5ea";
+}
+
+/* COMMENTS */
+function toggleCommentForm(){
+  commentForm.style.display=commentForm.style.display==="none"?"block":"none";
+}
+
+function addComment(){
+  if(!cText.value) return;
+  db.child(currentStoryId).child("comments").push({
+    name:cName.value||"Anonim",
+    text:cText.value,
+    time:Date.now()
+  });
+  cName.value=cText.value="";
+  commentForm.style.display="none";
+}
+
+function loadComments(){
+  commentsDiv.innerHTML="";
+  db.child(currentStoryId).child("comments").on("value",snap=>{
+    commentsDiv.innerHTML="";
+    snap.forEach(c=>{
+      const d=c.val();
+      const el=document.createElement("div");
+      el.className="commentBox";
+      el.innerHTML=`
+        <strong>${d.name}</strong>
+        <button style="float:right;border:none;background:none;color:red"
+          onclick="deleteComment('${c.key}')">🗑</button>
+        <br>${d.text}<br>
+        <small>${new Date(d.time).toLocaleString()}</small>
+      `;
+      commentsDiv.appendChild(el);
+    });
+  });
+}
+
+function deleteComment(id){
+  if(confirm("Hapus komentar?")){
+    db.child(currentStoryId).child("comments").child(id).remove();
+  }
+}
+
+function deleteStory(){
+  if(!currentStoryId) return;
+
+  if(confirm("Yakin ingin menghapus cerpen ini?")){
+    db.child(currentStoryId).remove()
+      .then(()=>{
+        alert("Cerpen berhasil dihapus");
+        showList();
+      });
+  }
+}
+</script>
+</body>
+</html>

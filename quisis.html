@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Realtime Quiz Multiplayer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{font-family:Arial;background:#f4f6fb;margin:0}
+.view{display:none;padding:20px}
+.card{background:#fff;padding:15px;border-radius:10px;margin-bottom:10px}
+button{padding:10px 15px;border:none;border-radius:6px;background:#4f46e5;color:#fff;margin:5px 0}
+input,select{width:100%;padding:3px;margin:5px 0}
+.answer{background:#e5e7eb;padding:10px;margin:6px;border-radius:6px}
+.answer:hover{background:#c7d2fe}
+h2{text-align:center}
+#homeBtn{
+  position:fixed;
+  top:10px;
+  left:10px;
+  z-index:999;
+  background:#22c55e;
+  display:none;
+}
+</style>
+</head>
+
+<body>
+<button id="homeBtn" onclick="goHome()">🏠 Home</button>
+<!-- MENU -->
+<div class="view" id="menu">
+  <h2>Realtime Quiz</h2>
+  <button onclick="show('host')">Buat Kuis</button>
+  <button onclick="show('join')">Join Kuis</button>
+</div>
+
+<!-- HOST -->
+<div class="view" id="host">
+  <h2>Host</h2>
+  <input id="quizTitle" placeholder="Judul kuis">
+  <input id="q" placeholder="Soal">
+  <input id="a0" placeholder="Jawaban A">
+  <input id="a1" placeholder="Jawaban B">
+  <input id="a2" placeholder="Jawaban C">
+  <input id="a3" placeholder="Jawaban D">
+  <select id="correct">
+    <option value="0">A</option>
+    <option value="1">B</option>
+    <option value="2">C</option>
+    <option value="3">D</option>
+  </select>
+  <input id="timer" value="10" placeholder="Timer (detik)">
+  <button onclick="addQ()">➕ Tambah Soal</button>
+  <p>Jumlah Soal: <b id="count">0</b></p>
+  <button onclick="createRoom()">Buat Room</button>
+  <p id="pin"></p>
+  <button onclick="startQuiz()">▶ Mulai</button>
+</div>
+
+<!-- JOIN -->
+<div class="view" id="join">
+  <h2>Join Kuis</h2>
+  <input id="pinJoin" placeholder="PIN">
+  <input id="nameJoin" placeholder="Nama">
+  <button onclick="joinRoom()">Masuk</button>
+</div>
+
+<!-- GAME -->
+<div class="view" id="game">
+  <h2 id="question"></h2>
+  <div id="answers"></div>
+  <p>⏱ <span id="time"></span></p>
+</div>
+
+<!-- END -->
+<div class="view" id="end">
+  <h2>Leaderboard</h2>
+  <div id="board"></div>
+</div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script>
+firebase.initializeApp({
+  apiKey: "AIzaSyAVN64QFnQfiVpWxhOjO0kJX6lDGSVVZUs",
+  authDomain: "quis-cfc6b.firebaseapp.com",
+  databaseURL: "https://quis-cfc6b-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "quis-cfc6b",
+  storageBucket: "quis-cfc6b.firebasestorage.app",
+  messagingSenderId: "715759618288",
+  appId: "1:715759618288:web:48a7773f3ec80c7d5bda35",
+  measurementId: "G-TCQYBNYKDQ"
+});
+const db = firebase.database();
+</script>
+
+<script>
+let qs=[], roomId="", timerInt;
+let playerId="p"+Math.random().toString(36).substr(2,6);
+
+// NAV
+function show(v){
+ document.querySelectorAll('.view').forEach(x=>x.style.display="none");
+ document.getElementById(v).style.display="block";
+
+ // home button logic
+ document.getElementById("homeBtn").style.display =
+   (v==="menu") ? "none" : "block";
+}
+show("menu");
+
+// HOST
+function addQ(){
+ if(!q.value) return alert("Soal kosong");
+ qs.push({
+  q:q.value,
+  o:[a0.value,a1.value,a2.value,a3.value],
+  c:+correct.value,
+  t:+timer.value||10
+ });
+ count.innerText=qs.length;
+ q.value=a0.value=a1.value=a2.value=a3.value="";
+}
+
+function createRoom(){
+ if(qs.length==0) return alert("Belum ada soal");
+ roomId=Math.floor(100000+Math.random()*900000);
+ db.ref("rooms/"+roomId).set({
+  quiz:{title:quizTitle.value,questions:qs},
+  status:"lobby",
+  current:0
+ });
+ pin.innerHTML="PIN: <b>"+roomId+"</b>";
+ listen();
+}
+
+function startQuiz(){
+ db.ref("rooms/"+roomId).update({
+  status:"play",
+  current:0
+ });
+ show("game");
+}
+
+// JOIN
+function joinRoom(){
+ roomId=pinJoin.value;
+ if(!roomId) return alert("PIN kosong");
+ db.ref("rooms/"+roomId+"/players/"+playerId).set({
+  name:nameJoin.value,
+  score:0
+ });
+ listen();
+}
+
+// REALTIME
+function listen(){
+ db.ref("rooms/"+roomId+"/status").on("value",s=>{
+  if(s.val()=="play") show("game");
+  if(s.val()=="end") show("end");
+ });
+
+ db.ref("rooms/"+roomId+"/current").on("value",snap=>{
+  if(snap.exists()) renderQ(snap.val());
+ });
+}
+
+function renderQ(i){
+ db.ref("rooms/"+roomId+"/quiz/questions/"+i).once("value",snap=>{
+  if(!snap.exists()){
+    db.ref("rooms/"+roomId+"/status").set("end");
+    loadBoard();
+    return;
+  }
+  let qd=snap.val();
+  question.innerText=qd.q;
+  answers.innerHTML="";
+  qd.o.forEach((o,idx)=>{
+    let d=document.createElement("div");
+    d.className="answer";
+    d.innerText=o;
+    d.onclick=()=>answer(idx,qd.c,i);
+    answers.appendChild(d);
+  });
+  startTimer(qd.t,i);
+ });
+}
+
+function startTimer(t,i){
+ clearInterval(timerInt);
+ let s=t;
+ time.innerText=s;
+ timerInt=setInterval(()=>{
+  s--; time.innerText=s;
+  if(s<=0){
+    clearInterval(timerInt);
+    db.ref("rooms/"+roomId+"/current").set(i+1);
+  }
+ },1000);
+}
+
+function answer(a,c,i){
+ clearInterval(timerInt);
+ if(a==c){
+  db.ref("rooms/"+roomId+"/players/"+playerId+"/score")
+   .transaction(v=>(v||0)+10);
+ }
+ db.ref("rooms/"+roomId+"/current").set(i+1);
+}
+
+function loadBoard(){
+ db.ref("rooms/"+roomId+"/players").once("value",snap=>{
+  board.innerHTML="";
+  snap.forEach(p=>{
+    board.innerHTML+=`<div class="card">${p.val().name} : ${p.val().score}</div>`;
+  });
+ });
+}
+
+function goHome(){
+  // stop timer
+  clearInterval(timerInt);
+
+  // hentikan listener (aman)
+  if(roomId){
+    db.ref("rooms/"+roomId).off();
+  }
+
+  roomId="";
+  show("menu");
+}
+
+</script>
+
+</body>
+</html>
