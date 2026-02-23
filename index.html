@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalender Modern 2025</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    body{
+      overscroll-behavior-y: contain;
+      margin:0;
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(180deg,#eef2ff,#f3f4f6);
+      background-size:cover;
+      background-position:center;
+      background-attachment:fixed;
+      color:var(--text);
+  height: 100%;
+  overflow: hidden;
+    }
+
+    :root{
+      --primary:#4f46e5;
+      --secondary:#22c55e;
+      --bg:#f3f4f6;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --radius:18px;
+    }
+
+    /* Spinner overlay */
+    #loading-spinner {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: whitesmoke;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      left: 0px;
+      top: 0px;
+    }
+
+    /* Spinner animasi */
+    .spinner {
+      border: 8px solid grey;
+      border-top: 8px solid black;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    /* Animasi putaran */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Sembunyikan spinner setelah halaman dimuat */
+    body.loaded #loading-spinner {
+      display: none;
+    }
+
+
+
+
+
+
+    
+#main { 
+	width: 100%; 
+	min-height: 100vh; 
+	padding-bottom: 50px; 
+	background-color: white; 
+	display: flex; 
+	flex-wrap: wrap; 
+} 
+
+#addBtn { 
+	position: absolute; 
+	left: 0px; 
+	top: 59px; 
+	background-color: #2d3436; 
+	color: white; 
+	padding: 3px; 
+	border: 0; 
+	outline: 0; 
+	border-radius: 5px; 
+	font-family: 'Poppins',sans-serif;
+} 
+
+.btn { 
+	display: flex; 
+	justify-content: center; 
+	align-items: center; 
+	background-color: #81ecec; 
+	margin-top: 0px; 
+} 
+
+.note { 
+	width: 330px; 
+	height: 250px; 
+	background-color: white; 
+	margin: 15px; 
+	margin-top: 40px; 
+	border-radius: 10px; 
+	margin-bottom: 30px; 
+} 
+
+.icons { 
+  width: 100%;
+  background-color: black;
+  color: black;
+  padding: 5px;
+  justify-content: start;
+  border-radius: 10px 10px 0px 0px;
+  grid-template-columns: repeat(2, 2fr);
+  display: grid;
+} 
+
+.icons i { 
+	padding: 0px; 
+	cursor: pointer; 
+} 
+
+.note textarea { 
+border: none;
+  width: 97%;
+  height: 87%;
+  resize: none;
+  padding: 10px;
+  font-size: 18px;
+  background-color: #ffe082;
+  border-radius: 0px 0px 10px 10px;
+  font-family: 'Poppins',sans-serif;
+} 
+
+.title-div textarea { 
+border-radius: 10px 10px 0px 0px;
+  background: #f3f6fb;
+  font-weight: bolder;
+  height: 20px;
+  width: 97%;
+  text-align: center;
+  font-family: 'Poppins',sans-serif;
+} 
+
+.heading { 
+	position: fixed; 
+	margin-top: 46px; 
+	color: ivory; 
+} 
+
+.note textarea:focus { 
+	border: 0; 
+	outline: 0; 
+}
+    
+a, a:visited, a:hover, a:active {
+  color: inherit; /* atau tentukan warna spesifik, misalnya 'black' */
+  text-decoration: none;
+}
+
+
+
+    /* Then style the iframe to fit in the container div with full height and width */
+    .responsive-iframe {
+  width: 100%;
+  height: calc(100vh - 40px);
+  border: none;
+    }
+
+
+
+
+
+    /* HEADER */
+    .header{
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:rgba(255,255,255,.85);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid #e5e7eb;
+    }
+    .header-inner{
+      max-width:1200px;
+      margin:auto;
+      padding:14px 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .brand{
+      font-weight:700;
+      color:var(--primary);
+      font-size:1.1rem;
+    }
+
+ 
+.wrapper{max-width:1200px;margin:auto;padding:20px}
+.grid{display:grid;grid-template-columns:380px 1fr;gap:20px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+  padding:20px
+}
+.cal-header{display:flex;justify-content:space-between;align-items:center}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px}
+.day-header{text-align:center;font-size:.75rem;font-weight:600;color:var(--muted)}
+.day{
+  text-align:center;padding:10px 0;border-radius:10px;
+  cursor:pointer;transition:.2s
+}
+.day:hover{background:#eef2ff}
+.today{background:var(--secondary);color:#fff;font-weight:600}
+.event-day{background:var(--primary);color:#fff;font-weight:600}
+
+.event-item{
+  background:#f9fafb;border-left:4px solid var(--primary);
+  padding:12px;border-radius:10px;margin-bottom:10px;
+  position:relative;font-size:.9rem
+}
+.delete-btn{
+  position:absolute;top:8px;right:8px;
+  background:#ef4444;color:#fff;
+  border:none;border-radius:6px;
+  padding:4px 6px;font-size:12px;cursor:pointer
+}
+textarea,input[type=time]{
+  width:100%;padding:10px;border-radius:10px;
+  border:1px solid #e5e7eb;margin-top:6px
+}
+button{cursor:pointer;border:none;border-radius:10px;padding:10px}
+.btn-plus{
+  width:48px;height:48px;border-radius:50%;
+  background:var(--primary);color:#fff;font-size:24px
+}
+.btn-save{
+  background:var(--secondary);color:#fff;width:100%;margin-top:8px
+}
+.hidden{display:none}
+
+
+
+
+/* === Header Scroll === */
+.header-scroll {
+position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  background: black;      /* warna header */
+  padding: 10px;
+  z-index: 1000;
+  scrollbar-width: thin;
+}
+
+/* sembunyikan scrollbar (opsional) */
+.header-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.header-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.5);
+  border-radius: 4px;
+}
+
+/* tombol di dalam header */
+.header-scroll button {
+flex: 0 0 auto;
+  background: #eae6df;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  margin-right: 15px;
+  padding: 7px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+font-family: 'Poppins',sans-serif;
+}
+
+.header-scroll button:hover {
+  background: black;
+  color: white;
+}
+
+/* === Konten Utama === */
+main {
+  padding: 20px;
+}
+
+.tabcontent {
+display: none;
+
+}
+
+    .baris {
+    }
+    .terakhir {
+      background-color: black;
+      color: white;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="loading-spinner">
+    <div class="spinner"></div>
+    <p>Please Wait....</p>
+  </div>
+
+
+<div class="header-scroll">
+  <button class="tablink" onclick="openPage('Calender', this,)" id="defaultOpen">Home</button>
+  <button class="tablink" onclick="openPage('Jadwal', this, )">Sholat</button>
+  <button class="tablink" onclick="openPage('Cerpen', this, )">Cerpen</button>
+  <button class="tablink" onclick="openPage('Quis', this, )">Quisis</button>
+  <button class="tablink" onclick="openPage('NOTE', this, )">Note</button>
+  <button class="tablink" onclick="openPage('Alquran', this, )">Al Quran</button>
+  <button class="tablink" onclick="openPage('Doa', this, )">Doa</button>
+  <button class="tablink" onclick="openPage('VIDEO', this, )">Video</button>
+  <button class="tablink" onclick="openPage('GAME', this, )">Game</button>
+  <button class="tablink" onclick="openPage('LINK', this, )">Link</button>
+</div>
+
+
+<br><br>
+
+<div id="Calender" class="tabcontent">
+
+<div class="wrapper">
+<div class="grid">
+
+<!-- KALENDER -->
+<div class="card">
+  <div class="cal-header">
+    <button onclick="prevMonth()">❮</button>
+    <b id="monthName"></b>
+    <button onclick="nextMonth()">❯</button>
+  </div>
+  <div id="calendarContainer"></div>
+</div>
+
+<!-- EVENT -->
+<div class="card">
+  <b id="eventTitle">Detail Event</b>
+  <div id="eventList"></div>
+
+  <div style="margin-top:10px">
+    <button class="btn-plus" onclick="toggleForm()">+</button>
+  </div>
+
+  <div id="eventForm" class="hidden">
+    <textarea id="eventText" placeholder="Nama event..."></textarea>
+    <input type="time" id="eventTime">
+    <button class="btn-save" onclick="addEvent()">Simpan</button>
+  </div>
+</div>
+
+</div>
+</div>
+
+
+</div>
+
+
+<div id="NOTE" class="tabcontent" style="display: block;font-size: small";>
+	<div class="btn"> 
+		<button id="addBtn"> 
+			<i class="fas fa-plus"></i> 
+			Add Note 
+		</button> 
+	</div> 
+	<div id="main"> 
+
+	</div> 
+</div>
+
+
+<div id="Alquran" class="tabcontent" style="display: block;font-size: small";>
+<iframe class="responsive-iframe" src="QURANOFFLINE.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+
+
+
+
+
+
+<div id="Doa" class="tabcontent" style="display: block;font-size: small";>
+<button class="tablink" onclick="openPage('Doa Berangkat dari Rumah', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">1. Doa Berangkat dari Rumah</button>
+ <button class="tablink" onclick="openPage('Doa Setelah Duduk dalam Kendaraan', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">2. Doa Setelah Duduk dalam Kendaraan</button>
+ <button class="tablink" onclick="openPage('Doa ketika Kendaraan Mulai Bergerak', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">3. Doa ketika Kendaraan Mulai Bergerak</button>
+ <button class="tablink" onclick="openPage('Doa ketika Tiba di Tempat Tujuan', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">4. Doa ketika Tiba di Tempat Tujuan</button>
+ <button class="tablink" onclick="openPage('Niat Umrah', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">5. Niat Umrah</button>
+ <button class="tablink" onclick="openPage('Doa Selesai Berihram', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">6. Doa Selesai Berihram</button>
+ <button class="tablink" onclick="openPage('Lafal Talbiyah', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">7. Lafal Talbiyah</button>
+ <button class="tablink" onclick="openPage('Doa Memasuki Kota Makkah', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">8. Doa Memasuki Kota Makkah</button>
+ <button class="tablink" onclick="openPage('Doa Masuk Masjidil Haram', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">9. Doa Masuk Masjidil Haram</button>
+ <button class="tablink" onclick="openPage('Doa ketika Melihat Ka’bah', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">10. Doa ketika Melihat Ka’bah</button>
+ <button class="tablink" onclick="openPage('Doa Tawaf Dari Hajar Aswad ke Rukun Yamani', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">11. Doa Tawaf Dari Hajar Aswad ke Rukun Yamani</button>
+ <button class="tablink" onclick="openPage('Doa Tawaf Dari Rukun Yamani ke Hajar Aswad', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">12. Doa Tawaf Dari Rukun Yamani ke Hajar Aswad</button>
+ <button class="tablink" onclick="openPage('Doa Sa’i', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">13. Doa Sa’i</button>
+ <button class="tablink" onclick="openPage('Doa Menggunting Rambut', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">14. Doa Menggunting Rambut</button>
+ <button class="tablink" onclick="openPage('Doa ketika Masuk Arafah', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">15. Doa ketika Masuk Arafah</button>
+ <button class="tablink" onclick="openPage('Doa ketika Sampai di Muzdalifah', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">16. Doa ketika Sampai di Muzdalifah</button>
+ <button class="tablink" onclick="openPage('Doa ketika Sampai di Mina', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">17. Doa ketika Sampai di Mina</button>
+ <button class="tablink" onclick="openPage('Doa Masuk Kota Madinah', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">18. Doa Masuk Kota Madinah</button>
+ <button class="tablink" onclick="openPage('Doa Masuk Masjid Nabawi', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">19. Doa Masuk Masjid Nabawi</button>
+ <button class="tablink" onclick="openPage('Doa ketika Pulang Haji/Umrah', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">20. Doa ketika Pulang Haji/Umrah</button>
+ <button class="tablink" onclick="openPage('Zikir Pagi', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">21. Zikir Pagi</button>
+ <button class="tablink" onclick="openPage('Zikir Petang', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">22. Zikir Petang</button>
+ <button class="tablink" onclick="openPage('Doa Minum Air Zamzam', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">23. Doa Minum Air Zamzam</button>
+ 
+<button class="tablink" onclick="openPage('Niat Tayamum', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">24. Niat Tayamum</button>
+ 
+<button class="tablink" onclick="openPage('Doa berlindung dari kemalasan', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">25. Doa berlindung dari kemalasan</button>
+
+<button class="tablink" onclick="openPage('Doa berlindung dari hilangnya nikmat dan kesehatan', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">26. Doa berlindung dari hilangnya nikmat dan kesehatan</button>
+
+<button class="tablink" onclick="openPage('Doa minta rezeki yang halal', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">27. Doa minta rezeki yang halal  (dibaca jumat)</button>
+
+<button class="tablink" onclick="openPage('Doa mohon kemudahan', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">28. Doa mohon kemudahan</button>
+
+<button class="tablink" onclick="openPage('123', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">29. Niat sholat Jamak Qoshor Dhuhur Ashar</button>
+<button class="tablink" onclick="openPage('456', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">30. Niat sholat Jamak Qoshor Maghrib Isya</button>
+<button class="tablink" onclick="openPage('Doa tetap taat', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">31. Doa Tetap dalam Ketaatan</button>
+<button class="tablink" onclick="openPage('Doa pembuka ijabah', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">32. Doa Pembuka Ijabah</button>
+<button class="tablink" onclick="openPage('Doa rasulullah', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">33. Doa Rasulullah</button>
+<button class="tablink" onclick="openPage('Doa keluar rumah', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">34. Doa ketika keluar rumah</button>
+<button class="tablink" onclick="openPage('Doa nabi saat kesusahan', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">35. Doa nabi saat kesusahan</button>
+<button class="tablink" onclick="openPage('Doa saat sujud', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">36. Doa mohon ampun saat sujud</button>
+
+
+<br><br>
+</div>
+
+
+<div id="VIDEO" class="tabcontent" style="display: block;font-size: small";>
+<button class="tablink" onclick="link_1()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">1. Cara Tayammum</button>
+<button class="tablink" onclick="link_2()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">2. Cara Wudhu Hemat Air</button>
+<button class="tablink" onclick="link_3()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">3. Tips Menggunakan Toilet Pesawat</button>
+<button class="tablink" onclick="link_4()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">4. Tips Menggunakan Toilet Pesawat2</button>
+<button class="tablink" onclick="link_5()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">5. Tips Memakai Kain Ihram</button>
+<button class="tablink" onclick="link_6()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">6. Tips Menjaga Wudhu</button>
+<button class="tablink" onclick="link_7()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">7. Tempat Wudhu Pria Dekat Kakbah</button>
+<button class="tablink" onclick="link_8()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">8. Tempat Wudhu Wanita Dekat Kakbah</button>
+<button class="tablink" onclick="link_9()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">9. Tips Jadwal di Masjidil Haram</button>
+<button class="tablink" onclick="link_10()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">10. Rukun Umroh, Wajib Umroh, Sunah Umroh, Larangan Umroh</button>
+<button class="tablink" onclick="link_11()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">11. Cara Memakai Sorban</button>
+<button class="tablink" onclick="link_12()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">12. Tips Doa di Masjidil Haram</button>
+<button class="tablink" onclick="link_13()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">13. Tips Barang Bawaan Umroh Pria</button>
+<button class="tablink" onclick="link_14()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">14. Tata Cara Pelaksanaan Umroh</button>
+<button class="tablink" onclick="link_15()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">15. Tips Doa di Roudhoh</button>
+<button class="tablink" onclick="link_16()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">16. Tips Membedakan Air Zamzam di Masjid Nabawi</button>
+<button class="tablink" onclick="link_17()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">17. Tips Tak Lupa Jumlah Putaran Tawaf</button>
+<button class="tablink" onclick="link_18()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">18. Tips Doa Di Depan Kakbah</button>
+<button class="tablink" onclick="link_19()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">19. Tips Sebelum Berangkat Umroh</button>
+<button class="tablink" onclick="link_20()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">20. Salam Di Makam Rasululloh</button>
+<button class="tablink" onclick="link_21()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">21. Cara Masuk Roudhoh Menggunakan Aplikasi Nusuk</button>
+<button class="tablink" onclick="link_22()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">22. Tips Saat Tersesat di Masjidil Haram</button>
+<button class="tablink" onclick="link_23()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">23. Manasik Umroh</button>
+<button class="tablink" onclick="link_24()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">24. Yasin 41</button>
+<button class="tablink" onclick="link_25()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">25. Doa diantara 2 pilar hijau sai</button>
+<button class="tablink" onclick="link_26()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">26. Doa yang lebih baik dihapal</button>
+<button class="tablink" onclick="link_27()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">27. Doa agar diundang ke Baitullah</button>
+<button class="tablink" onclick="link_28()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">28. Video Klip Syair bagus</button>
+<button class="tablink" onclick="link_29()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">29. Video Klip Nasehat</button>
+<button class="tablink" onclick="link_30()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">30. Doa Ketika Kesusahan</button>
+<button class="tablink" onclick="link_31()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">31. Sholat Taubat</button>
+<button class="tablink" onclick="link_32()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">32. Tasbih Malaikat</button>
+<button class="tablink" onclick="link_33()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">33. Doa kemarin besok dan masa depan</button>
+<button class="tablink" onclick="link_34()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">34. Tips Mengganti Sholat yang pernah dilewatkan</button>
+<button class="tablink" onclick="link_35()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">35. Jenis Panggilan Shalat Jenazah</button>
+<button class="tablink" onclick="link_36()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">36. Saat menghadapi perkara sulit</button>
+<button class="tablink" onclick="link_37()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">37. Doa Agar Cepat Paham</button>
+<button class="tablink" onclick="link_38()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">38. Doa Agar Jasad Tidak Membusuk</button>
+<button class="tablink" onclick="link_39()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">39. Urutan Memotong Kuku</button>
+<button class="tablink" onclick="link_40()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">40. Tips Apabila ada Hujan Malam Jumat/Jumat</button>
+<button class="tablink" onclick="linkA_1()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">41. Tips Melipat Pakaian</button>
+<button class="tablink" onclick="linkA_2()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">42. Tips Tali Temali</button>
+<button class="tablink" onclick="linkA_3()" style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">43. Tips Tali Temali2</button>
+
+</div>
+
+
+<div id="GAME" class="tabcontent">
+ <button class="tablink" onclick="openPage('GAME1', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">1. Game Umrah</button>
+ <button class="tablink" onclick="openPage('GAME2', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">2. Game Zhafran</button>
+ <button class="tablink" onclick="openPage('GAME3', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">3. Game Angka</button>
+ <button class="tablink" onclick="openPage('GAME4', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">4. Map Interaktif</button>
+</div>
+
+<div id="GAME1" class="tabcontent">
+<iframe class="responsive-iframe" src="game umrah.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+<div id="GAME2" class="tabcontent">
+<iframe class="responsive-iframe" src="Web.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+<div id="GAME3" class="tabcontent">
+<iframe class="responsive-iframe" src="Angka.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+<div id="GAME4" class="tabcontent">
+<iframe class="responsive-iframe" src="MAP.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+<div id="LINK" class="tabcontent">
+<iframe class="responsive-iframe" src="link.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+<div id="Jadwal" class="tabcontent">
+<iframe class="responsive-iframe" src="jadwal.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+<div id="Cerpen" class="tabcontent">
+<iframe class="responsive-iframe" src="baca.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+<div id="Quis" class="tabcontent">
+<iframe class="responsive-iframe" src="quisis.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+
+
+<div id="Doa saat sujud" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>36. Doa mohon ampun saat sujud</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللّٰهُمَّ اغْفِرْ لِيْ ذَنْبِيْ كُلَّهُ ، دِقَّهُ وَجِلَّهُ ، وَأَوَّلَهُ وَآخِرَهُ ، وَعَلَانِيَتَهُ وَسِرَّهُ.
+
+</div>
+<div >Allāhumma-ghfir lī dhambī kullah, diqqahū wa jillah, wa awwalahū wa ākhirah, wa ʿalāniyatahū wa sirrah.
+</div><br>
+<div>O Allah, forgive for me all of my sins: the minor and major, the first and the last, the public and the private.</div><br>
+</div>
+
+
+
+<div id="Doa nabi saat kesusahan" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>35. Doa nabi saat kesusahan</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>لاَ إِلَهَ إِلاَّ اللهُ الْعَظِيمُ الْحَلِيمُ لاَ إِلَهَ إِلاَّ اللهُ رَبُّ الْعَرْشِ الْعَظِيمِ لاَ إِلَهَ إِلاَّ اللهُ رَبُّ السَّمَاوَاتِ وَرَبُّ الأَرْضِ وَرَبُّ الْعَرْشِ الْكَرِيممِ
+
+</div>
+<div >La Ilaha Illallahul adzimul halim, la ilaha illallah rabbul arsyil adzim, la ilaha illallahu rabbus samawati wa rabbul ardhi rabbul arsyil karim.
+</div><br>
+<div>Tiada tuhan yang patut disembah selain Allah Yang Mahaagung lagi Maha Penyayang. Tiada tuhan yang patut disembah selain Allah Pemilik ‘Arsy yang agung. Tiada tuhan yang patut disembah selain Allah Pencipta Langit, Pencipta Bumi, Pemilik ‘Arsy yang mulia.</div><br>
+</div>
+
+
+
+<div id="Doa keluar rumah" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>34. Doa keluar rumah</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اللَّهُمَّ إنِّي أَعُوذ بِكَ أَنْ أَضِلَّ أَوْ أُضَلَّ، أَوْ أَزِلَّ أَوْ أُزَلَّ، أَوْ أَظْلِمَ أَوْ أُظْلَمَ، أَوْ أَجْهَلَ أَوْ يُجْهَلَ عليَّ 
+
+</div>
+<div >Allahumma inni a’udzu bika an adhilla aw udholla, aw azilla aw uzalla, aw azhlima aw uzhlama, aw ajhala aw yujhala ‘alayya
+</div><br>
+<div>Ya Allah, aku berlindung kepada-Mu dari kesesatan diriku atau disesatkan orang lain, dari ketergelinciran diriku atau digelincirkan orang lain, dari menzholimi diriku atau dizholimi orang lain, dan dari kebodohan diriku atau dibodohkan orang lain</div><br>
+</div>
+
+
+
+<div id="Doa rasulullah" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>33. Doa Rasulullah</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللّٰهُمَّ إِنَّا نَسْأَلُكَ مِنْ خَيْرِ مَا سَأَلَكَ مِنْهُ نَبِيُّكَ مُحَمَّدٌ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ ، وَنَعُوْذُ بِكَ
+ مِنْ شَرِّ مَا اسْتَعَاذَ مِنْهُ نَبِيُّكَ مُحَمَّدٌ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ ، وَأَنْتَ الْمُسْتَعَانُ ، وَعَلَيْكَ الْبَلَاغُ ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ.
+
+</div>
+<div >Allāhumma innā nas’aluka min khayri mā sa’alaka minhu Nabiyyuka Muḥammadun ṣallā-llāhu ʿalayhi wa sallam, wa naʿūdhu bika min sharri ma-staʿādha minhu Nabiyyuka Muḥammadun ṣallā-llāhu ʿalayhi wa sallam, wa Anta-l-Mustaʿān, wa ʿalayka-l-balāgh, wa lā ḥawla wa lā quwwata illā bi-llāh.
+</div><br>
+<div>O Allah, we beg You for the good which Your Prophet Muhammad ﷺ asked from You. We seek Your protection from the evil which Your Prophet Muhammad ﷺ sought protection for from You. You are the One whose assistance is sought and You are the Only One who provides and suffices. There is no power (to avert evil) nor strength (to do good) except by Allah.</div><br>
+</div>
+
+
+
+<div id="Doa pembuka ijabah" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>32. Doa Pembuka Ijabah</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>
+اَللَّهُمَّ إِنِّي أَسْأَلُكَ بِأَنِّي أَشْهَدُ أَنَّكَ أَنْتَ اللهُ لَا إِلَهَ إِلَّا أَنْتَ الأَحَدُ الصَّمَدُ الَّذِي لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ
+</div>
+<div >Allahumma inni as'aluka bi anni asyhadu annaka antallahu, la ilaha illa antal ahadus shomad, alladzi lam yalid wa lam yulad, wa lam yakullahu kufuwan ahad.
+</div><br>
+<div>Tuhanku, aku memohon (pertolongan) kepada-Mu. Aku bersaksi bahwa Engkau adalah Allah. Tiada tuhan selain Engkau Yang Maha Esa, tempat bergantung yang tiada melahirkan dan tiada dilahirkan, serta tiada apapun yang menyamai-Nya.</div><br>
+</div>
+
+
+
+<div id="Doa tetap taat" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>31. Doa Tetap dalam Ketaatan</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>
+اللَّهُمَّ مُصَرِّفَ الْقُلُوبِ صَرِّفْ قُلُوبَنَا عَلَى طَاعَتِكَ
+</div>
+<div >ALLAHUMMA MUSHORRIFAL QULUUB SHORRIF QULUUBANAA ‘ALA THO’ATIK
+</div><br>
+<div>Ya Allah, Dzat yang memalingkan hati, palingkanlah hati kami kepada ketaatan beribadah kepada-Mu.</div><br>
+</div>
+
+
+
+<div id="Doa mohon kemudahan" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>28. Doa mohon kemudahan</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>
+اللَّهُمَّ لاَ سَهْلَ إِلَّا مَا جَعَلْتَهُ سَهْلاً ، وَ أَنْتَ تَجْعَلُ الْحُزْنَ إِذَا شِئْتَ سَهْلاً
+</div>
+<div >Allahumma laa sahla illaa maa ja'altahu sahlan wa 'anta taj 'alil huzna 'idza syi'ta sahlan
+</div><br>
+<div>Ya Allah, tiada satu kemudahan, melainkan jika Engkau jadikan mudah, dan dengan kehendak-Mu sesuatu yang sulit itu menjadi mudah.</div><br>
+</div>
+
+
+
+<div id="Doa minta rezeki yang halal" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>27. Doa minta rezeki yang halal</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>
+اللَّهُمَّ اكْفِنِي بِحَلَالِكَ عَنْ حَرَامِكَ، وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاكَ
+</div>
+<div >Allahumma ikfini bihalalika an haramika wa aghnini bifadhlika amman siwak</div><br>
+<div>Ya Allah, cukupkanlah aku dengan yang halal sehingga aku tidak membutuhkan yang haram, dan cukupkanlah aku dengan karunia-Mu dari (bergantung kepada) selain-Mu. </div><br>
+</div>
+
+<div id="Doa berlindung dari hilangnya nikmat dan kesehatan" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>26. Doa berlindung dari hilangnya nikmat dan kesehatan</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>
+اللَّهُمَّ إِنِّى أَعُوذُ بِكَ مِنْ زَوَالِ نِعْمَتِكَ وَتَحَوُّلِ عَافِيَتِكَ وَفُجَاءَةِ نِقْمَتِكَ وَجَمِيعِ سَخَطِكَ
+</div>
+<div >ALLOOHUMMA INNII A’UUDZU BIKA MIN ZAWAALI NI’MATIK, WA TAHAWWULI ‘AAFIYATIK, WA FUJAA’ATI NIQMATIK, WA JAMII’I SAKHOTHIK</div><br>
+<div>Ya Allah, sesungguhnya aku berlindung kepada-Mu dari hilangnya kenikmatan yang telah Engkau berikan, dari berubahnya kesehatan yang telah Engkau anugerahkan, dari siksa-Mu yang datang secara tiba-tiba, dan dari segala kemurkaan-Mu </div><br>
+</div>
+
+<div id="Doa berlindung dari kemalasan" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>25. Doa berlindung dari kemalasan</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;> اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَأَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ، وَأَعُوذُ بِكَ مِنَ الْجُبْنِ وَالْبُخْلِ، وَأَعُوذُ بِكَ مِنْ غَلَبَةِ الدَّيْنِ، وَقَهْرِ الرِّجَالِ</div>
+<div >Allâhumma innî a'ûdzu bika minal hammi wal hazan. Wa a'ûdzu bika minal 'ajzi wal kasal. Wa a'ûdzu bika minal jubni wal bukhl. Wa a'ûdzu bika min gholabatid daini wa qahrir rijâl.</div><br>
+<div > Ya Allah, aku berlindung kepada-Mu dari kebingungan dan kesedihan, aku berlindung kepada-Mu dari kelemahan dan kemalasan, aku berlindung kepada-Mu dari ketakutan dan kekikiran, aku berlindung kepada-Mu dari lilitan utang dan tekanan orang-orang.</div><br>
+</div>
+
+
+
+
+<div id="Doa Berangkat dari Rumah" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>1. Doa Berangkat dari Rumah</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>بِسْمِ اللهِ تَوَكَّلْتُ عَلَى اللهِ وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ</div>
+<div >Bismillâhi tawakkaltu ‘alallâhi wa lâ ḫaula wa lâ quwwata illâ billâhil ‘aliyyil ‘adhîm</div><br>
+<div >Dengan nama Allah, aku bertawakal kepada Allah. Tidak ada daya dan kekuatan kecuali dengan (pertolongan) Allah.</div><br>
+</div>
+<div id="Doa Setelah Duduk dalam Kendaraan" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>2. Doa Setelah Duduk dalam Kendaraan</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>بِسْمِ اللّٰهِ مَجْرٰ۪ىهَا وَمُرْسٰىهَاۗ اِنَّ رَبِّيْ لَغَفُوْرٌ رَّحِيْمٌ</div>
+<div >bismillâhi majrehâ wa mursâhâ, inna rabbî laghafûrur raḫîm</div><br>
+<div >Dengan (menyebut) nama Allah pada waktu berlayar dan berlabuhnya. Sesungguhnya Tuhanku Maha Pengampun, Maha Penyayang (QS Hud: 41).</div><br>
+</div>
+<div id="Doa ketika Kendaraan Mulai Bergerak" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>3. Doa ketika Kendaraan Mulai Bergerak</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>ببِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ . اَللهُ أَكْبَرُ اَللهُ أَكْبَرُ اَللهُ أَكْبَرُ. سُبْحَانَ الَّذِيْسَخَّرَلَنَا هٰذَا وَ مَا كُنَّا لَهٗ مُقْرِنِيْنَ . وَ إِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُوْنٌَ</div>
+<div >Bimillâhir-raḫmânir-raḫîm. Allâhu akbar, Allâhu akbar, Allâhu akbar.Subhaanal-ladzii sakhkhara lanaa haadzaa wa maa kunnaa lahu muqrin- iina, wa innaa ilaa rabbinaa lamunqalibuun</div><br>
+<div >Dengan menyebut nama Allah yang Maha Pengasih lagi Maha Penyayang. Allah Mahabesar. Allah Mahabesar. Allah Mahabesar.Maha Suci Tuhan yang telah menundukkan kendaraan ini untuk kami pada- hal kami sebelumnya tidak mampu menguasainya. Dan sesungguhnya kami akan kembali kepada Tuhan kami kelak di hari Kiamat." (HR Ad-Darimi)</div><br>
+</div>
+<div id="Doa ketika Tiba di Tempat Tujuan" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>4. Doa ketika Tiba di Tempat Tujuan</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللّٰهُمَّ إِنِّيْ أَسْأَلُكَ خَيْرَهَا وَخَيْرَ أَهْلِهَا وَخَيْرَ مَـــا فِيْهَا، وَأَعُوْذُ بِكَ مِنْ شَرِّهَا وَشَرِّ أَهْلِهَا وَشَرِّ مَـــا فِيْهَا</div>
+<div >Allâhumma innî as-aluka khairahâ wa khaira ahlihâ wa khaira mâ fîhâ wa a‘ûzubika min syarrihâ wa syarri ahlihâ wa syarri mâ fîhâ</div><br>
+<div >Ya Allah, aku memohon kepada-Mu kebaikan tempat ini dan kebaikan penduduknya serta kebaikan apa pun yang ada di dalamnya. Aku berlindung kepada-Mu dari kejahatan tempat ini dan kejahatan penduduknya serta kejahatan apa pun yang ada di dalamnya.</div><br>
+</div>
+<div id="Niat Umrah" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>5. Niat Umrah</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>لَبَّيْكَ اللَّهُمَّ عُمْرَةً</div>
+<div >Labbaikallaahumma 'umroh</div><br>
+<div >Aku sambut panggilan-Mu ya Allah untuk berumroh.</div><br>
+</div>
+<div id="Doa Selesai Berihram" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>6. Doa Selesai Berihram</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللّٰهُمَّ أُحَرِّمُ شَعْرِيْ وَبَشَرِيْ وَجَسَدِيْ وَجَمِيْعَ جَوَارِحِيْ مِنْ كُلِّ شَيْءٍ حَرَّمْتَهُ عَلَى الْمُحْرِمِ أَبْتَغِيْ بِذٰلِكَ وَجْهَكَ الْكَرِيْمَ يَا رَبَّ الْعَــالِمِيْنًَ</div>
+<div >Allâhumma uḫarrimu sya‘rî wa basyarî wa jasadî wa jamî‘a jawâriḫî min kulli syai-in ḫarramtahu ‘alâl muḫrimi abtaghî bidzâlika wajhakal karîma yâ rabbal ‘âlamîn</div><br>
+<div >Ya Allah aku mengharamkan rambut, kulit, tubuh, dan seluruh anggota tubuhku dari semua yang Kauharamkan bagi seorang yang sedang berihram, demi mengharapkan ridha-Mu semata, wahai Tuhan pemelihara seluruh keberadaan.</div><br>
+</div>
+<div id="Lafal Talbiyah" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>7. Lafal Talbiyah</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>لَبَّيْكَ اللّٰهُمَّ لَبَّيْكَ، لَبَّيْكَ لَا شَرِيْكَ لَكَ لَبَّيْكَ، إِنَّ الْحَمْدَ وَالنِّعْمَةَ لَكَ وَالْمُلْكَ لَا شَرِيْكَ لَكَ</div>
+<div >Labbaika-llâhumma labbaîk, labbaika lâ syarîka laka labbaîk. Innal ḫamda wan ni‘mata laka wal mulk. Lâ syarîka lak</div><br>
+<div >Aku datang memenuhi panggilan-Mu, ya Allah. Aku datang memenuhi panggilan-Mu. Aku datang memenuhi panggilan-Mu. Tiada sekutu bagi-Mu. Aku datang memenuhi panggilan-Mu. Sungguh, segala puji, nikmat, dan segala kekuasaan adalah milik-Mu. Tiada sekutu bagi-Mu.</div><br>
+</div>
+<div id="Doa Memasuki Kota Makkah" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>8. Doa Memasuki Kota Makkah</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللّٰهُمَّ هٰذَا حَرَمُكَ وَأَمْنُكَ فَحَرِّمْ لَحْمِيْ وَدَمِيْ وَشَعْرِيْ وَبَشَرِيْ عَلَى النَّارِ وَاٰمِنِّـيْ مِنْ عَذَابِكَ يَوْمَ تَبْعَثُ عِبَادَكَ وَاجْعَلْنِيْ مِنْ أَوْلِيَائِكَ وَأَهْلِ طَاعَتِكَ</div>
+<div >Allâhumma hâdzâ ḫaramuka wa amnuka faḫarrim laḫmî wa damî wa sya‘rî wa basyarî ‘alan-nâri wa âminnî min ‘adzâbika yauma tab’atsu ‘ibadaka waj‘alnî min auliyâ-ika wa ahli thâ‘atika</div><br>
+<div >Ya Allah, ini adalah tanah haram-Mu dan tempat aman-Mu. Haramkanlah dagingku, darahku, rambutku, dan kulitku dari api neraka. Selamatkanlah aku dari siksa-Mu pada hari ketika Engkau membangkitkan hamba-hamba-Mu. Jadikan aku termasuk di antara kekasih-Mu dan hamba-hamba yang taat pada-Mu.</div><br>
+</div>
+<div id="Doa Masuk Masjidil Haram" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>9. Doa Masuk Masjidil Haram</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللّٰهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ فَحَيِّنَا رَبَّنَا بِالسَّلَامِ وَأَدْخِلْنَا الْجَنَّةَ دَارَالسَّلَامِ تَبَارَكْتَ وَتَعَالَيْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ. اَللّٰهُمَّ افْتَحْ لِيْ أَبْوَابَ رَحْمَتِكَ وَمَغْفِرَتِكَ وَأَدْخِلْنِيْ فِيْهَا. بِسْمِ اللهِ وَالْحَمْدُ ِللّٰهِ وَالصَّلَاةُ وَالسَّلَامُ عَلٰى رَسُوْلِ اللهِ</div>
+<div >Allâhumma antassalâm, waminkas-salâm fahayyinâ rabbanâ bissalâm wa adkhilnal jannata dâras-salâm tabârakta wata‘âlaita yâ dzaljalâli wal ikrâm. Allâhumma-ftaḫ lî abwâba raḫmatika wamaghfiratika wa adkhilnî fîhâ. Bismillâhi walḫamdulillahi wash-shalâtu wassalâmu ‘alâ rasûlillâh</div><br>
+<div >Ya Allah Engkaulah Dzat yang memberi keselamatan (kesejahteraan), dari-Mu keselamatan datang, maka hidupkanlah kami ya Allah dengan selamat (sejahtera), masukkan kami ke dalam surga rumah keselamatan. Mahasuci Engkau, Mahaluhur Engkau, wahai Tuhan sang pemulik keagungan dan kemuliaan. Ya Allah bukakanlah untukku pintu rahmat dan ampunan-Mu. Masukanlah aku ke dalam rahmat dan ampunan-Mu itu. Dengan nama Allah. Segala puji bagi Allah. Semoga rahmat dan keselamatan terlimpah untuk Rasulullah.</div><br>
+</div>
+<div id="Doa ketika Melihat Ka’bah" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>10. Doa ketika Melihat Ka’bah</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللّٰهُمَّ زِدْ هٰذَا الْبَيْتَ تَشْرِيْفًا وَتَعْظِيْمًا وَتَكْرِيمًا وَمَهَابَةً وَزِدْ مَنْ شَرّفَهُ وَكَرّمَهُ مِمَّنْ حَجَّهُ أَوِاعْتَمَرَهُ تَشْرِيفًا وَتَكْرِيمًا وَتَعْظِيمًا وَبِرًّا</div>
+<div >Allâhumma zid hâdzal baita tasyrîfan wa ta‘dhîman wa takrîman wa maḫâbatan wa zid man syarafahu wa karramahu mim man ḫajjahu awi‘tamarahu tasyrîfan wa ta‘dhîman wa takrîman wa birran</div><br>
+<div >Ya Allah, tambahkanlah kemuliaan, kehormatan, keagungan dan kehebatan pada Baitullah ini; dan tambahkanlah pula kepada orang-orang yang memuliakan, menghormati, dan mengagungkannya di antara mereka yang berhaji atau yang berumrah kemuliaan, kehormatan, kebesaran, dan kebaikan.</div><br>
+</div>
+<div id="Doa Tawaf Dari Hajar Aswad ke Rukun Yamani" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>11. Doa Tawaf Dari Hajar Aswad ke Rukun Yamani</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>سُبْحَانَ اللهِ وَالْحَمْدُ لِلّٰهِ وَلَا إِلٰهَ إِلَّا اللهُ وَاللهُ أَكْبَرُ. وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ الْعَلِيِّ الْعَظِيْم</div>
+<div >Subḫânallâhi walḫamdulillâhi wa lâ ilâha illallâhu allâhu akbar. wa lâ haula wa lâ quwwata illâ billâhil ‘aliyyil ‘adhîm</div><br>
+<div >Mahasuci Allah. Segala pujian hanya pantas disanjungkan kepada Allah. Tiada Tuhan selain Allah. Allah Mahabesar. Tidak ada daya dan kekuatan kecuali (pertolongan) dari Allah yang Mahaluhur lagi Mahaagung.</div><br>
+</div>
+<div id="Doa Tawaf Dari Rukun Yamani ke Hajar Aswad" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>12. Doa Tawaf Dari Rukun Yamani ke Hajar Aswad</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>رَبَّنَا اٰتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْاٰخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ</div>
+<div >Rabbanâ âtinaa fid dun-yâ ḫasanah, wa fil âkhirati ḫasanah, wa qinâ a‘dzâban nâr</div><br>
+<div >Wahai Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat dan hindarkanlah kami dari siksa neraka.</div><br>
+</div>
+<div id="Doa Sa’i" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>13. Doa Sa’i</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللهُ أَكْبَرُ، اَللهُ أَكْبَرُ، اَللهُ أَكْبَرُ، اَللهُ أَكْبَرُ، كَبِيْرًا وَالْحَمْدُ لِلّٰهِ كَثِيرًا وَسُبْحَانَ اللهِ بُكْرَةً وَأَصِيْلًا</div>
+<div >Allâhu akbar, allâhu akbar, allâhu akbar, allâhu akbar, kabîran walḫamdulillâhi katsîran wa subḫanallâhi bukratan wa ashîlâ</div><br>
+<div >Allah Mahabesar, Allah Mahabesar, Allah Mahabesar, Allah Mahabesar, Mahabesar Allah segala puji bagi-Nya, Mahasuci Allah baik saat pagi maupun petang.</div><br>
+</div>
+<div id="Doa Menggunting Rambut" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>14. Doa Menggunting Rambut</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللّٰهُمَّ اثْبُتْ لِيْ بِكُلِّ شَعْرَةٍ حَسَنَةً وَامْحُ عَنِّيْ بِهَا سَيِّئَةً وَارْفَعْ لِيْ عِنْدَكَ دَرَجَةً</div>
+<div >Allâhumma-tsbut lî bi kuli sya’ratin ḫasanatan wa-mḫu ‘annî bihâ sayyi-atan wa-rfa‘ lî ‘indaka darajatan</div><br>
+<div >Ya Allah, tetapkanlah kebaikan untukku lantaran setiap helai rambut ini, hapuslah keburukan dari diriku lantaran rambut ini, dan angkatlah derajatku di sisi-Mu.</div><br>
+</div>
+<div id="Doa ketika Masuk Arafah" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>15. Doa ketika Masuk Arafah</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللّٰهُمَّ إِلَيْكَ تَوَجَّهْتُ، وَبِكَ اعْتَصَمْتُ، وَعَلَيْكَ تَوَكَّلْتُ. اَللّٰهُمَّ اجْعَلْنِيْ مِمَّنْ تُبَاهِيْ بِهِ الْيَوْمَ مَلَائِكَتَكَ، إِنَّكَ عَلَى كُلِّ شَيْءٍ قَدِيْرٌ</div>
+<div >Allâhumma ilaika tawajjahtu, wabika‘tashamtu, wa’alaika tawakkaltu. Allâhummaj’alnî mim-man tubaahî bihil yauma malâ-ikataka, innaka ‘alâ kulli syai-in qadîrun</div><br>
+<div >Ya Allah, hanya kepada-Mulah aku menghadap, dengan-Mulah aku berpegang teguh, pada-Mulah aku berserah diri. Ya Allah, jadikanlah aku menjadi bagian dari orang yang hari ini Engkau banggakan di hadapan Malaikat-Mu. Sesungguhnya Engkau Mahakuasa atas segala sesuatu.</div><br>
+</div>
+<div id="Doa ketika Sampai di Muzdalifah" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>16. Doa ketika Sampai di Muzdalifah</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللّٰهُمَّ إِنَّ هٰذِهِ مُزْدَلِفَةُ جُمِعَتْ فِيْهَا أَلْسِنَةٌ مُخْتَلِفَةٌ تَسْأَلُكَ حَوَائِجَ مُتَنَوِّعَةً فَاجْعَلْنِيْ مِمَّنْ دَعَاكَ فَاسْتَجَبْتَ لَهُ وَتَوَكَّلَ عَلَيْكَ فَكَفَّيْتَهُ يَا أَرْحَمَ الرَّاحِمِيْنَ</div>
+<div >Allâhumma inna hâdzihi muzdalifatu jumi‘at fîhâ alsinatun mukhtalifatun, tas’aluka hawâija mutanawwi‘atan faj’alnî mimman da‘âka fastajabta lahu wa tawakkala ‘alaika fakaffaitahu yâ arḫamar râḫimîn</div><br>
+<div >Ya Allah, sesungguhnya di Muzdalifah ini telah berkumpul bermacam-macam bahasa yang memohon kepada-Mu berbagai hajat yang beraneka ragam. Maka, masukkanlah aku ke dalam golongan orang yang berdoa lalu Engkau kabulkan, golongan orang yang berserah diri pada-Mu lalu Engkau lindungi dia, wahai Tuhan yang Maha Pengasih dari segala yang pengasih.</div><br>
+</div>
+<div id="Doa ketika Sampai di Mina" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>17. Doa ketika Sampai di Mina</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللّٰهُمَّ هٰذَا مِنَى فَامْنُنْ عَلَيَّ بِمَا مَنَنْتَ بِهِ عَلَى أَوْلِيَائِكَ وَأَهْلِ طَاعَتِكَ</div>
+<div >Allâhumma hadzâ minâ famnun ‘alayya bimâ mananta bihi ‘alâ awliyâika wa ahli thâ‘atika</div><br>
+<div >Ya Allah, tempat ini adalah di Mina, anugerahkanlah kepadaku apa yang Engkau telah anugerahkan kepada orang-orang yang selalu dekat dan taat kepada-Mu.</div><br>
+</div>
+<div id="Doa Masuk Kota Madinah" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>18. Doa Masuk Kota Madinah</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللّٰهُمَّ هٰذَا حَرَمُ رَسُولِكَ وَاجْعَلْهُ لِيْ وِقَايَةً مِنَ النَّارِ وَأَمَانًا مِنَ الْعَذَابِ وَسُوْءِ الْحِسَابِ</div>
+<div >Allâhumma hâdzâ ḫaramu rasûlika waj‘alhu lî wiqâyatan minan nâri wa amânan minal ‘adzâbi wa sû-il ḫisâb</div><br>
+<div >Ya Allah, negeri ini adalah tanah haram rasul-Mu. Jadikanlah ia penjaga bagiku dari neraka, pengaman dari siksa dan buruknya perhitungan amal.</div><br>
+</div>
+<div id="Doa Masuk Masjid Nabawi" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>19. Doa Masuk Masjid Nabawi</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ. أَعُوْذُ بِاللهِ الْعَظِيمِ وَوَجْهِ الْكَرِيمِ وَسُلْطَانِهِ الْقَدِيْمِ مِنَ الشَّيْطَانِ الرَّجِيمِ. اَللّٰهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ</div>
+<div >Bismillahir raḫmânir rahîm. A‘ûdzubillâhil ‘adhîmi wa wajhil karîmi wa sulthânihil qadîmi minasy syaithânir rajîmi, allâhumma-ftaḫlî abwâba raḫmatika</div><br>
+<div >Dengan menyebut nama Allah Yang Maha Pengasih dan Maha Penyayang. Aku berlindung kepada Allah yang Mahaagung, Dzat-Nya yang Mahamulia, dan kekuasaan-Nya Yang Mahadahulu, dari godaan setan yang terkutuk. Ya Allah, bukakanlah bagiku segala pintu rahmat-Mu.</div><br>
+</div>
+<div id="Doa ketika Pulang Haji/Umrah" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>20. Doa ketika Pulang Haji/Umrah</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>لَا إِلٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، اٰيِبُوْنَ تَائِبُوْنَ عَابِدُوْنَ سَاجِدُوْنَ لِرَبِّنَا حَامِدُوْنَ صَدَقَ اللهُ وَعْدَهُ وَنَصَرَ عَبْدَهُ وَهَزَمَ الْأَحْزَابَ وَحْدَهُ</div>
+<div >Lâ ilâha illallâhu waḫdahu lâ syarîkalahu lahul mulku wa lahul ḫamdu wahuwa ‘alâ kulli syai-in qadîr(un), âyibûn tâibûn ‘âbidûn sâjidûna li rabbinâ ḫâmidûn shadaqallâhu wa‘dahu wa nashara ‘abdahu wa hazamal aḫzâba waḫdahu</div><br>
+<div >Tidak ada Tuhan kecuali Allah, Tuhan yang Esa, tidak ada sekutu bagi-Nya. Dia pemilik seluruh kerajaan dan segala pujian. Dia Mahakuasa atas segala sesuatu. Semoga kami termasuk orang-orang yang kembali, orang-orang yang ahli taubat, ahli ibadah, ahli sujud dan ahli memuji Tuhan kami. Allah menepati janji-Nya, menolong hamba-Nya, dan mengalahkan sendiri musuh-musuh -Nya.</div><br>
+</div>
+
+<div id="Zikir Pagi" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>21. Zikir Pagi</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ</div>
+<div >Aku berlindung kepada Allah dari godaan syaitan yang terkutuk.</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ الْحَيُّ الْقَيُّومُ، لاَ تَأْخُذُهُ سِنَةٌ وَلاَ نَوْمٌ، لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ، مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلاَّ بِإِذْنِهِ، يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ، وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلاَّ بِمَا شَاءَ، وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ، وَلَا يَئُودُهُ حِفْظُهُمَا، وَهُوَ الْعَلِيُّ الْعَظِيمُ</div>
+<div >Allah, tidak ada ilah (yang berhak disembah) melainkan Dia, yang hidup kekal lagi terus menerus mengurus (makhluk-Nya). Dia tidak mengantuk dan tidak tidur. Kepunyaan-Nya apa yang di langit dan di bumi. Tiada yang dapat memberi syafa’at di sisi-Nya tanpa seizin-Nya. Dia mengetahui apa-apa yang di hadapan mereka dan di belakang mereka. Mereka tidak mengetahui apa-apa dari ilmu Allah melainkan apa yang dikehendaki-Nya. Kursi Allah meliputi langit dan bumi. Dia tidak merasa berat memelihara keduanya. Dan Dia Maha Tinggi lagi Maha besar. (QS. Al Baqarah: 255) (Dibaca 1 x)</div><br>
+"<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+
+قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ
+</div>"
+<div >Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang. Katakanlah: Dialah Allah, Yang Maha Esa. Allah adalah ilah yang bergantung kepada-Nya segala urusan. Dia tidak beranak dan tiada pula diperanakkan, dan tidak ada seorang pun yang setara dengan Dia. (QS. Al Ikhlas: 1-4) (Dibaca 3 x)</div><br>
+"<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+
+قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ مِن شَرِّ مَا خَلَقَ وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ  وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ
+</div>"
+<div >Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang. Katakanlah: Aku berlindung kepada Rabb yang menguasai Shubuh, dari kejahatan makhluk-Nya, dan dari kejahatan malam apabila telah gelap gulita, dan dari kejahatan-kejahatan wanita tukang sihir yang menghembus pada buhul-buhul, dan dari kejahatan orang yang dengki apabila ia dengki. (QS. Al Falaq: 1-5) (Dibaca 3 x)</div><br>
+"<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+
+قُلْ أَعُوذُ بِرَبِّ النَّاسِ مَلِكِ النَّاسِ إِلَهِ النَّاسِ مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ مِنَ الْجِنَّةِ وَ النَّاسِ
+</div>"
+<div >Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang. Katakanlah: Aku berlindung kepada Rabb manusia. Raja manusia. Sembahan manusia, dari kejahatan (bisikan) syaitan yang biasa bersembunyi, yang membisikkan (kejahatan) ke dalam dada manusia, dari jin dan manusia.” (QS. An Naas: 1-6) (Dibaca 3 x)</div><br>
+"<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لاَ إِلَـهَ إِلاَّ اللهُ وَحْدَهُ لاَ شَرِيْكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيْرُ. رَبِّ أَسْأَلُكَ خَيْرَ مَا فِيْ هَذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوْذُ بِكَ مِنْ شَرِّ مَا فِيْ هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ، رَبِّ أَعُوْذُ بِكَ مِنَ الْكَسَلِ وَسُوْءِ الْكِبَرِ، رَبِّ أَعُوْذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ
+</div>"
+<div >Kami telah memasuki waktu pagi dan kerajaan hanya milik Allah, segala puji bagi Allah. Tidak ada ilah (yang berhak disembah) kecuali Allah semata, tiada sekutu bagi-Nya. Milik Allah kerajaan dan bagi-Nya pujian. Dia-lah Yang Mahakuasa atas segala sesuatu. Wahai Rabbku, aku mohon kepada-Mu kebaikan di hari ini dan kebaikan sesudahnya. Aku berlindung kepada-Mu dari kejahatan hari ini dan kejahatan sesudahnya. Wahai Rabbku, aku berlindung kepada-Mu dari kemalasan dan kejelekan di hari tua. Wahai Rabbku, aku berlindung kepada-Mu dari siksaan di neraka dan siksaan di alam kubur.” (Dibaca 1 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوْتُ وَإِلَيْكَ النُّشُوْرُ</div>
+<div >Ya Allah, dengan rahmat dan pertolongan-Mu kami memasuki waktu pagi, dan dengan rahmat dan pertolongan-Mu kami memasuki waktu petang. Dengan rahmat dan pertolongan-Mu kami hidup dan dengan kehendak-Mu kami mati. Dan kepada-Mu kebangkitan (bagi semua makhluk).” (Dibaca 1 x)</div><br>
+"<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللَّهُمَّ أَنْتَ رَبِّيْ لاَ إِلَـهَ إِلاَّ أَنْتَ، خَلَقْتَنِيْ وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوْذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوْءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوْءُ بِذَنْبِيْ فَاغْفِرْ لِيْ فَإِنَّهُ لاَ يَغْفِرُ الذُّنُوْبَ إِلاَّ أَنْتَ.
+</div>"
+<div >Ya Allah, Engkau adalah Rabbku, tidak ada ilah yang berhak disembah kecuali Engkau, Engkaulah yang menciptakanku. Aku adalah hamba-Mu. Aku akan setia pada perjanjianku pada-Mu (yaitu aku akan mentauhidkan-Mu) semampuku dan aku yakin akan janji-Mu (berupa surga untukku). Aku berlindung kepada-Mu dari kejelekan yang kuperbuat. Aku mengakui nikmat-Mu kepadaku dan aku mengakui dosaku. Oleh karena itu, ampunilah aku. Sesungguhnya tiada yang mengampuni dosa kecuali Engkau.” (Dibaca 1 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللَّهُمَّ عَافِنِيْ فِيْ بَدَنِيْ، اَللَّهُمَّ عَافِنِيْ فِيْ سَمْعِيْ، اَللَّهُمَّ عَافِنِيْ فِيْ بَصَرِيْ، لاَ إِلَـهَ إِلاَّ أَنْتَ. اَللَّهُمَّ إِنِّي أَعُوْذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوْذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لاَ إِلَـهَ إِلاَّ أَنْتَ</div>
+<div >Ya Allah, selamatkanlah tubuhku (dari penyakit dan dari apa yang tidak aku inginkan). Ya Allah, selamatkanlah pendengaranku (dari penyakit dan maksiat atau dari apa yang tidak aku inginkan). Ya Allah, selamatkanlah penglihatanku, tidak ada Ilah yang berhak diibadahi dengan benar kecuali Engkau. Ya Allah, sesungguhnya aku berlindung kepada-Mu dari kekufuran dan kefakiran. Aku berlindung kepada-Mu dari siksa kubur, tidak ada Ilah yang berhak diibadahi dengan benar kecuali Engkau.” (Dibaca pagi dan sore 3x)</div><br>
+"<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللَّهُمَّ إِنِّيْ أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَاْلآخِرَةِ، اَللَّهُمَّ إِنِّيْ أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِيْنِيْ وَدُنْيَايَ وَأَهْلِيْ وَمَالِيْ اللَّهُمَّ اسْتُرْ عَوْرَاتِى وَآمِنْ رَوْعَاتِى. اَللَّهُمَّ احْفَظْنِيْ مِنْ بَيْنِ يَدَيَّ، وَمِنْ خَلْفِيْ، وَعَنْ يَمِيْنِيْ وَعَنْ شِمَالِيْ، وَمِنْ فَوْقِيْ، وَأَعُوْذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِيْ
+</div>"
+<div >Ya Allah, sesungguhnya aku memohon kebajikan dan keselamatan di dunia dan akhirat. Ya Allah, sesungguhnya aku memohon kebajikan dan keselamatan dalam agama, dunia, keluarga dan hartaku. Ya Allah, tutupilah auratku (aib dan sesuatu yang tidak layak dilihat orang) dan tenteramkanlah aku dari rasa takut. Ya Allah, peliharalah aku dari muka, belakang, kanan, kiri dan atasku. Aku berlindung dengan kebesaran-Mu, agar aku tidak disambar dari bawahku (oleh ular atau tenggelam dalam bumi dan lain-lain yang membuat aku jatuh).” (Dibaca 1 x)</div><br>
+"<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَاوَاتِ وَاْلأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيْكَهُ، أَشْهَدُ أَنْ لاَ إِلَـهَ إِلاَّ أَنْتَ، أَعُوْذُ بِكَ مِنْ شَرِّ نَفْسِيْ، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِيْ سُوْءًا أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ
+</div>"
+<div >Ya Allah, Yang Maha Mengetahui yang ghaib dan yang nyata, wahai Rabb pencipta langit dan bumi, Rabb segala sesuatu dan yang merajainya. Aku bersaksi bahwa tidak ada ilah yang berhak disembah kecuali Engkau. Aku berlindung kepadaMu dari kejahatan diriku, setan dan balatentaranya (godaan untuk berbuat syirik pada Allah), dan aku (berlindung kepada-Mu) dari berbuat kejelekan terhadap diriku atau menyeretnya kepada seorang muslim.” (Dibaca 1 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>بِسْمِ اللَّهِ الَّذِى لاَ يَضُرُّ مَعَ اسْمِهِ شَىْءٌ فِى الأَرْضِ وَلاَ فِى السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ</div>
+<div >Dengan nama Allah yang bila disebut, segala sesuatu di bumi dan langit tidak akan berbahaya, Dia-lah Yang Maha Mendengar lagi Maha Mengetahui.” (Dibaca 3 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>رَضِيْتُ بِاللهِ رَبًّا، وَبِاْلإِسْلاَمِ دِيْنًا، وَبِمُحَمَّدٍ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا</div>
+<div >Aku ridha Allah sebagai Rabb, Islam sebagai agama dan Muhammad shallallahu ‘alaihi wa sallam sebagai nabi.” (Dibaca 3 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>يَا حَيُّ يَا قَيُّوْمُ بِرَحْمَتِكَ أَسْتَغِيْثُ، وَأَصْلِحْ لِيْ شَأْنِيْ كُلَّهُ وَلاَ تَكِلْنِيْ إِلَى نَفْسِيْ طَرْفَةَ عَيْنٍ أَبَدًا</div>
+<div >Wahai Rabb Yang Maha Hidup, wahai Rabb Yang Berdiri Sendiri (tidak butuh segala sesuatu), dengan rahmat-Mu aku minta pertolongan, perbaikilah segala urusanku dan jangan diserahkan kepadaku sekali pun sekejap mata (tanpa mendapat pertolongan dariMu).” (Dibaca 1 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>أَصْبَحْنَا عَلَى فِطْرَةِ اْلإِسْلاَمِ وَعَلَى كَلِمَةِ اْلإِخْلاَصِ، وَعَلَى دِيْنِ نَبِيِّنَا مُحَمَّدٍ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ، وَعَلَى مِلَّةِ أَبِيْنَا إِبْرَاهِيْمَ، حَنِيْفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِيْنَ</div>
+<div >Di waktu pagi kami memegang agama Islam, kalimat ikhlas (kalimat syahadat), agama Nabi kami Muhammad shallallahu ‘alaihi wa sallam, dan agama bapak kami Ibrahim, yang berdiri di atas jalan yang lurus, muslim dan tidak tergolong orang-orang musyrik.” (Dibaca 1 x di pagi hari saja)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>لاَ إِلَـهَ إِلاَّ اللهُ وَحْدَهُ لاَ شَرِيْكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيْرُ</div>
+<div >Tidak ada ilah yang berhak disembah selain Allah semata, tidak ada sekutu bagiNya. Bagi-Nya kerajaan dan segala pujian. Dia-lah yang berkuasa atas segala sesuatu.” (Dibaca 10 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>سُبْحَانَ اللهِ وَبِحَمْدِهِ: عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ وَمِدَادَ كَلِمَاتِهِ</div>
+<div >Maha Suci Allah, aku memujiNya sebanyak makhluk-Nya, sejauh kerelaan-Nya, seberat timbangan ‘Arsy-Nya dan sebanyak tinta tulisan kalimat-Nya.” (Dibaca 3 x di waktu pagi saja)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللَّهُمَّ إِنِّيْ أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلاً مُتَقَبَّلاً</div>
+<div >Ya Allah, sungguh aku memohon kepada-Mu ilmu yang bermanfaat (bagi diriku dan orang lain), rizki yang halal dan amal yang diterima (di sisi-Mu dan mendapatkan ganjaran yang baik).” (Dibaca 1 x setelah salam dari shalat Shubuh)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>سُبْحَانَ اللهِ وَبِحَمْدِهِ</div>
+<div >Maha suci Allah, aku memuji-Nya.” (Dibaca 100 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>أَسْتَغْفِرُ اللهَ وَأَتُوْبُ إِلَيْهِ</div>
+<div >Aku memohon ampun kepada Allah dan bertobat kepada-Nya.” (Dibaca 100 x dalam sehari)</div><br>
+</div>
+
+
+<div id="Zikir Petang" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>22. Zikir Petang</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ</div>
+<div >Aku berlindung kepada Allah dari godaan syaitan yang terkutuk.</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ الْحَيُّ الْقَيُّومُ، لاَ تَأْخُذُهُ سِنَةٌ وَلاَ نَوْمٌ، لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ، مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلاَّ بِإِذْنِهِ، يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ، وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلاَّ بِمَا شَاءَ، وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ، وَلَا يَئُودُهُ حِفْظُهُمَا، وَهُوَ الْعَلِيُّ الْعَظِيمُ</div>
+<div >Allah, tidak ada ilah (yang berhak disembah) melainkan Dia, yang hidup kekal lagi terus menerus mengurus (makhluk-Nya). Dia tidak mengantuk dan tidak tidur. Kepunyaan-Nya apa yang di langit dan di bumi. Tiada yang dapat memberi syafa’at di sisi-Nya tanpa seizin-Nya. Dia mengetahui apa-apa yang di hadapan mereka dan di belakang mereka. Mereka tidak mengetahui apa-apa dari ilmu Allah melainkan apa yang dikehendaki-Nya. Kursi Allah meliputi langit dan bumi. Dia tidak merasa berat memelihara keduanya. Dan Dia Maha Tinggi lagi Maha besar. (QS. Al Baqarah: 255) (Dibaca 1 x)</div><br>
+"<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+
+قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ
+</div>"
+<div >Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang. Katakanlah: Dialah Allah, Yang Maha Esa. Allah adalah ilah yang bergantung kepada-Nya segala urusan. Dia tidak beranak dan tiada pula diperanakkan, dan tidak ada seorang pun yang setara dengan Dia. (QS. Al Ikhlas: 1-4) (Dibaca 3 x)</div><br>
+"<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+
+قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ مِن شَرِّ مَا خَلَقَ وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ  وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ
+</div>"
+<div >Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang. Katakanlah: Aku berlindung kepada Rabb yang menguasai Shubuh, dari kejahatan makhluk-Nya, dan dari kejahatan malam apabila telah gelap gulita, dan dari kejahatan-kejahatan wanita tukang sihir yang menghembus pada buhul-buhul, dan dari kejahatan orang yang dengki apabila ia dengki. (QS. Al Falaq: 1-5) (Dibaca 3 x)</div><br>
+"<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+
+قُلْ أَعُوذُ بِرَبِّ النَّاسِ مَلِكِ النَّاسِ إِلَهِ النَّاسِ مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ مِنَ الْجِنَّةِ وَ النَّاسِ
+</div>"
+<div >Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang. Katakanlah: Aku berlindung kepada Rabb manusia. Raja manusia. Sembahan manusia, dari kejahatan (bisikan) syaitan yang biasa bersembunyi, yang membisikkan (kejahatan) ke dalam dada manusia, dari jin dan manusia.” (QS. An Naas: 1-6) (Dibaca 3 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>أَمْسَيْنَا وَأَمْسَى الْمُلْكُ للهِ، وَالْحَمْدُ للهِ، لَا إِلَهَ إِلاَّ اللهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُبِكَ مِنْ شَرِّ مَا فِي هَذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا، رَبِّ أَعُوذُبِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُبِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ</div>
+<div >Kami telah memasuki waktu petang dan kerajaan hanya milik Allah, segala puji bagi Allah. Tidak ada ilah (yang berhak disembah) kecuali Allah semata, tiada sekutu bagi-Nya. Milik Allah kerajaan dan bagi-Nya pujian. Dia-lah Yang Mahakuasa atas segala sesuatu.Wahai Rabbku, aku mohon kepada-Mu kebaikan di malam ini dan kebaikan sesudahnya. Aku berlindung kepadaMu dari kejahatan malam ini dan kejahatan sesudahnya. Wahai Rabbku, aku berlindung kepadaMu dari kemalasan dan kejelekan di hari tua. Wahai Rabbku, aku berlindung kepada-Mu dari siksaan di neraka dan siksaan di kubur.” (Dibaca 1 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا،وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيْرُ</div>
+<div >Ya Allah, dengan rahmat dan pertolongan-Mu kami memasuki waktu petang, dan dengan rahmat dan pertolongan-Mu kami memasuki waktu pagi. Dengan rahmat dan pertolonganMu kami hidup dan dengan kehendakMu kami mati. Dan kepada-Mu tempat kembali (bagi semua makhluk).” (Dibaca 1 x)</div><br>
+"<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللَّهُمَّ أَنْتَ رَبِّيْ لاَ إِلَـهَ إِلاَّ أَنْتَ، خَلَقْتَنِيْ وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوْذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوْءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوْءُ بِذَنْبِيْ فَاغْفِرْ لِيْ فَإِنَّهُ لاَ يَغْفِرُ الذُّنُوْبَ إِلاَّ أَنْتَ.
+</div>"
+<div >Ya Allah, Engkau adalah Rabbku, tidak ada ilah yang berhak disembah kecuali Engkau, Engkaulah yang menciptakanku. Aku adalah hamba-Mu. Aku akan setia pada perjanjianku pada-Mu (yaitu aku akan mentauhidkan-Mu) semampuku dan aku yakin akan janji-Mu (berupa surga untukku). Aku berlindung kepada-Mu dari kejelekan yang kuperbuat. Aku mengakui nikmat-Mu kepadaku dan aku mengakui dosaku. Oleh karena itu, ampunilah aku. Sesungguhnya tiada yang mengampuni dosa kecuali Engkau.” (Dibaca 1 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللَّهُمَّ عَافِنِيْ فِيْ بَدَنِيْ، اَللَّهُمَّ عَافِنِيْ فِيْ سَمْعِيْ، اَللَّهُمَّ عَافِنِيْ فِيْ بَصَرِيْ، لاَ إِلَـهَ إِلاَّ أَنْتَ. اَللَّهُمَّ إِنِّي أَعُوْذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوْذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لاَ إِلَـهَ إِلاَّ أَنْتَ</div>
+<div >Ya Allah, selamatkanlah tubuhku (dari penyakit dan dari apa yang tidak aku inginkan). Ya Allah, selamatkanlah pendengaranku (dari penyakit dan maksiat atau dari apa yang tidak aku inginkan). Ya Allah, selamatkanlah penglihatanku, tidak ada Ilah yang berhak diibadahi dengan benar kecuali Engkau. Ya Allah, sesungguhnya aku berlindung kepada-Mu dari kekufuran dan kefakiran. Aku berlindung kepada-Mu dari siksa kubur, tidak ada Ilah yang berhak diibadahi dengan benar kecuali Engkau.” (Dibaca pagi dan sore 3x)</div><br>
+"<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللَّهُمَّ إِنِّيْ أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَاْلآخِرَةِ، اَللَّهُمَّ إِنِّيْ أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِيْنِيْ وَدُنْيَايَ وَأَهْلِيْ وَمَالِيْ اللَّهُمَّ اسْتُرْ عَوْرَاتِى وَآمِنْ رَوْعَاتِى. اَللَّهُمَّ احْفَظْنِيْ مِنْ بَيْنِ يَدَيَّ، وَمِنْ خَلْفِيْ، وَعَنْ يَمِيْنِيْ وَعَنْ شِمَالِيْ، وَمِنْ فَوْقِيْ، وَأَعُوْذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِيْ
+</div>"
+<div >Ya Allah, sesungguhnya aku memohon kebajikan dan keselamatan di dunia dan akhirat. Ya Allah, sesungguhnya aku memohon kebajikan dan keselamatan dalam agama, dunia, keluarga dan hartaku. Ya Allah, tutupilah auratku (aib dan sesuatu yang tidak layak dilihat orang) dan tenteramkanlah aku dari rasa takut. Ya Allah, peliharalah aku dari muka, belakang, kanan, kiri dan atasku. Aku berlindung dengan kebesaran-Mu, agar aku tidak disambar dari bawahku (oleh ular atau tenggelam dalam bumi dan lain-lain yang membuat aku jatuh).” (Dibaca 1 x)</div><br>
+"<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اَللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَاوَاتِ وَاْلأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيْكَهُ، أَشْهَدُ أَنْ لاَ إِلَـهَ إِلاَّ أَنْتَ، أَعُوْذُ بِكَ مِنْ شَرِّ نَفْسِيْ، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِيْ سُوْءًا أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ
+</div>"
+<div >Ya Allah, Yang Maha Mengetahui yang ghaib dan yang nyata, wahai Rabb pencipta langit dan bumi, Rabb segala sesuatu dan yang merajainya. Aku bersaksi bahwa tidak ada ilah yang berhak disembah kecuali Engkau. Aku berlindung kepadaMu dari kejahatan diriku, setan dan balatentaranya (godaan untuk berbuat syirik pada Allah), dan aku (berlindung kepada-Mu) dari berbuat kejelekan terhadap diriku atau menyeretnya kepada seorang muslim.” (Dibaca 1 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>بِسْمِ اللَّهِ الَّذِى لاَ يَضُرُّ مَعَ اسْمِهِ شَىْءٌ فِى الأَرْضِ وَلاَ فِى السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ</div>
+<div >Dengan nama Allah yang bila disebut, segala sesuatu di bumi dan langit tidak akan berbahaya, Dia-lah Yang Maha Mendengar lagi Maha Mengetahui.” (Dibaca 3 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>رَضِيْتُ بِاللهِ رَبًّا، وَبِاْلإِسْلاَمِ دِيْنًا، وَبِمُحَمَّدٍ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا</div>
+<div >Aku ridha Allah sebagai Rabb, Islam sebagai agama dan Muhammad shallallahu ‘alaihi wa sallam sebagai nabi.” (Dibaca 3 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>يَا حَيُّ يَا قَيُّوْمُ بِرَحْمَتِكَ أَسْتَغِيْثُ، وَأَصْلِحْ لِيْ شَأْنِيْ كُلَّهُ وَلاَ تَكِلْنِيْ إِلَى نَفْسِيْ طَرْفَةَ عَيْنٍ أَبَدًا</div>
+<div >Wahai Rabb Yang Maha Hidup, wahai Rabb Yang Berdiri Sendiri (tidak butuh segala sesuatu), dengan rahmat-Mu aku minta pertolongan, perbaikilah segala urusanku dan jangan diserahkan kepadaku sekali pun sekejap mata (tanpa mendapat pertolongan dariMu).” (Dibaca 1 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>أَمْسَيْنَا عَلَى فِطْرَةِ اْلإِسْلاَمِ وَعَلَى كَلِمَةِ اْلإِخْلاَصِ، وَعَلَى دِيْنِ نَبِيِّنَا مُحَمَّدٍ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ، وَعَلَى مِلَّةِ أَبِيْنَا إِبْرَاهِيْمَ، حَنِيْفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِيْنَ</div>
+<div >Di waktu sore kami berada diatas fitrah agama Islam, kalimat ikhlas, agama Nabi kita Muhammad صلي الله عليه وسلم dan agama ayah kami, Ibrahim, yang berdiri di atas jalan yang lurus, muslim dan tidak tergolong orang-orang yang musyrik.” (Dibaca sore 1x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>لاَ إِلَـهَ إِلاَّ اللهُ وَحْدَهُ لاَ شَرِيْكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيْرُ</div>
+<div >Tidak ada ilah yang berhak disembah selain Allah semata, tidak ada sekutu bagiNya. Bagi-Nya kerajaan dan segala pujian. Dia-lah yang berkuasa atas segala sesuatu.” (Dibaca 10 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>سُبْحَانَ اللهِ وَبِحَمْدِهِ</div>
+<div >Maha suci Allah, aku memuji-Nya.” (Dibaca 100 x)</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>أَعُوْذُ بِكَلِمَاتِ اللهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ</div>
+<div >Aku berlindung dengan kalimat-kalimat Allah yang sempurna dari kejahatan makhluk yang diciptakanNya.” (Dibaca 3 x pada waktu petang)</div><br>
+</div>
+
+
+<div id="Doa Minum Air Zamzam" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>23. Doa Minum Air Zamzam</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا وَرِزْقًا وَاسِعًا وَشِفَاءً مِنْ كُلِّ دَاءٍ وَسَقَمٍ بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ</div>
+<div >Allahumma inni as-aluka 'ilman naafi'an, wa rizqan waasi'an, wa syifaa-an min kulli daa-in wa saqamin birahmatika yaa arhamar-raahimiin</div><br>
+<div >Ya Allah, sesungguhnya aku memohon kepada-Mu ilmu yang bermanfaat, rezeki yang luas, dan kesembuhan dari segala penyakit dengan rahmat-Mu, wahai dzat yang Maha Pengasih lagi Maha Penyayang.</div><br>
+</div>
+
+<div id="Niat Tayamum" class="tabcontent" style="display: block;font-size: small";>
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>24. Niat Tayamum</div>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>نَوَيْتُ التَّيَمُّمَ لِاسْتِبَاحَةِ الصَّلَاةِ للهِ تَعَالَى</div>
+<div >Nawaitut tayammuma lisstibaahatish shalaati fardlol lillaahi ta’aalaa</div><br>
+<div >Aku berniat tayamum agar diperbolehkan sholat karena Allah Ta’ala.</div><br>
+</div>
+
+
+<div id="123" class="tabcontent"style="display: block; font-size: small;text-align: justify;">
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>29. Sholat Jamak Qoshor(Zuhur dan Ashar)</div>
+<div ><b>Niat sholat Jama’ Qashar (Zuhur dan Ashar) masing-masing 2 rakaat, diawali dengan Sholat Zuhur,</b></div><br>
+<div >Lafadz Niat :</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>أصَلَّى فَرْضَ الظُّهْر رَكْعَتَيْنِ قَصْرًا مَجمُوعًا إِلَيْهِ الْعَصْرُ لِلَّهِ تَعَالَى</div><br>
+<div >Ushallii fardhazh zhuhri rak'ataini qashran majmuu'an ilaihil 'ashru adaa'an lillaahi ta'aalaa.</div><br>
+<div >Saya niat sholat fardhu Dzuhur dua rakaat secara qashar yang dikumpulkan padanya sholat Ashar karena Allah.</div><br>
+<div >Kemudian dilanjutkan Sholat Ashar :</div><br>
+<div >Lafadz Niat :</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>أصَلَّى فَرْضَ الْعَصْرِ رَكْعَتَيْنِ قَصْرًا مجْمُوْعًا إِلَى الظُّهْرِ لِلَّهِ تَعَالَى</div><br>
+<div >Ushallii fardhal 'ashri rak'ataini qashran majmuu'an ilazh zhuhri adaa'an lillaahi ta'aalaa.</div><br>
+<div >Saya niat sholat fardhu Ashar dua rakaat secara qashar yang dikumpulkan kepada sholat Dzuhur karena Allah</div><br><br>
+</div>
+
+<div id="456" class="tabcontent"style="display: block; font-size: small;text-align: justify;">
+<div style= font-size:small;display:flex;flex-direction:row-reverse;padding:10px;background:#eae6df;justify-content:center;>30. Sholat Jamak Qoshor (Maghrib dan Isya)</div>
+<div ><b>Niat sholat Jama’ Qashar (Maghrib dan Isya)</b></div><br>
+<div >Lafadz Niat :</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>أصَلَّى فَرْضَ المغرب ثلاث ركعات مَجمُوعًا إِلَيْهِ الْعشاء لِلَّهِ تَعَالَى</div><br>
+<div >Ushallii fardhal Maghrib tsalatsa Raka’atin majmuu'an ilaihil 'Isya adaa'an lillaahi ta'aalaa.</div><br>
+<div >Saya niat sholat fardhu Maghrib 3 rakaat yang dikumpulkan padanya sholat Isya karena Allah.</div><br>
+<div >Kemudian dilanjutkan Sholat Isya 2 rakaat :</div><br>
+<div >Lafadz Niat :</div><br>
+<div style= display:flex;flex-direction:row-reverse;padding:10px;background:white;font-size:xx-large;>أصَلَّى فَرْضَ الْعَشاء رَكْعَتَيْنِ قَصْرًا مجْمُوْعًا إِلَى المغرب لِلَّهِ تَعَالَى</div><br>
+<div >Ushallii fardhal 'Isya rak'ataini qashran majmuu'an ilal Maghrib adaa'an lillaahi ta'aalaa.</div><br>
+<div >Saya niat sholat fardhu Isya dua rakaat secara qashar yang dikumpulkan kepada sholat Maghrib karena Allah</div><br><br>
+
+
+<script>
+
+    // Saat semua resource halaman dimuat
+    window.addEventListener('load', function () {
+      document.body.classList.add('loaded');
+    });
+
+
+function link_1(){window.open("https://www.youtube.com/watch?v=U29UnCmyl0U");}
+function link_2(){window.open("https://www.youtube.com/shorts/UZc8NvSmfZA");}
+function link_3(){window.open("https://www.instagram.com/reel/DIkRvn4By7F/?igsh=MWdnNmFoZHAzbmdk");}
+function link_4(){window.open("https://www.instagram.com/reel/DLuZjPqvf6u/?igsh=dzVwM3N3aTY1dHBt");}
+function link_5(){window.open("https://www.instagram.com/reel/DI2gDs8zN3f/?igsh=ZjVmdnBqaHptY2Jz");}
+function link_6(){window.open("https://www.instagram.com/reel/DJ1UYxsBLS4/?igsh=MTIxemVudXVsdGtldQ==");}
+function link_7(){window.open("https://www.instagram.com/reel/DI97DprhYFM/?igsh=eHMxd3owNDNhM2lx");}
+function link_8(){window.open("https://www.instagram.com/reel/DJWbN9aBaOR/?igsh=bnpyNWZncW1saHo1");}
+function link_9(){window.open("https://www.instagram.com/reel/DE_zq5jSTAy/?igsh=MXVuMzRlcXd3YjBqNQ==");}
+function link_10(){window.open("https://www.instagram.com/reel/DLOxTnavFnX/?igsh=OWJydGQwamFsaWcw");}
+function link_11(){window.open("https://www.instagram.com/reel/DG7Ycoqy8TS/?igsh=MWM5azZkMDdrNHVxdw==");}
+function link_12(){window.open("https://www.instagram.com/reel/DIceupezKfb/?igsh=MWN4ZzFldDVvcmd0ZQ==");}
+function link_13(){window.open("https://www.instagram.com/reel/DFkYcHUS7gT/?igsh=YmZmcWo4ajl3OHNs");}
+function link_14(){window.open("https://www.instagram.com/p/DLSRCixzqGd/?igsh=MWVweG9kbXg5ampjZQ==");}
+function link_15(){window.open("https://www.instagram.com/reel/DIYfTEJBl_u/?igsh=MWZqN29qdzlxYXpsag==");}
+function link_16(){window.open("https://www.instagram.com/reel/DIERPZozine/?igsh=djNjYmZ4d3EwZjFs");}
+function link_17(){window.open("https://www.instagram.com/reel/DGUCGRMz9Kc/?igsh=eHZzbHBhYjF4dGdr");}
+function link_18(){window.open("https://www.instagram.com/reel/DHdw_k-TABC/?igsh=MWdhb2ZqdzkyN3c2bw==");}
+function link_19(){window.open("https://www.instagram.com/reel/DKt0O1mT9sf/?igsh=MXMxdnlvY3RveGpyOQ==");}
+function link_20(){window.open("https://www.instagram.com/reel/DH9_BiASUnB/?igsh=bTVyY2VmcXIwYWZj");}
+function link_21(){window.open("https://www.instagram.com/reel/DMBLsexIwvn/?igsh=cTJ1ZGN3OTJiZDRn");}
+function link_22(){window.open("https://www.instagram.com/reel/DJ3i6wnIXVS/?igsh=MTdmZm93ODA0NGJwbA==");}
+function link_23(){window.open("https://www.youtube.com/watch?v=Ygmlb0clqMU&pp=ygUgbWFuYXNpayB1bXJvaCB1c3RhZHogYWJkdWwgc29tYWQ%3D");}
+function link_24(){window.open("https://www.instagram.com/reel/DGSF9xrRVyC/?igsh=MXhjZnIxbGxmdXQ5dg==");}
+function link_25(){window.open("https://www.instagram.com/reel/DG0SjB_BrwD/?igsh=MWdpMHpsNmVsYXRkaw==");}
+function link_26(){window.open("https://www.instagram.com/reel/DIdWgl5SnKE/?igsh=MWp0NHNmaWh3ZG9xeg==");}
+function link_27(){window.open("https://www.instagram.com/reel/DITwXkpTLtq/?igsh=MTF4Y2x3N3I2czk0");}
+function link_28(){window.open("https://www.instagram.com/reel/DL4SqW_vI5b/?igsh=czYwMjAyZDZsNHA5");}
+function link_29(){window.open("https://www.instagram.com/reel/DJ6Fs2TPXBT/?igsh=ZHg4czdsbDNwOTlk");}
+function link_30(){window.open("https://www.instagram.com/reel/DJmOPT1z10L/?igsh=anFkY2tiNXpuZHZo");}
+function link_31(){window.open("https://www.instagram.com/reel/DJWXA4IyM_q/?igsh=bHdjNjB5N204emNi");}
+function link_32(){window.open("https://www.instagram.com/reel/DGJQzHdTvyi/?igsh=aTB2dTV4MzYydHV1");}
+function link_33(){window.open("https://www.instagram.com/reel/DG2_O_7Shke/?igsh=cW85Zm53dHpxcTl2");}
+function link_34(){window.open("https://www.instagram.com/reel/DHnumBII1xT/?igsh=YmZzc25zenZ2ZW9x");}
+function link_35(){window.open("https://www.instagram.com/reel/DLtYv9JTcdg/?igsh=MW5qeXVuZjY1MzY1NQ==");}
+function link_36(){window.open("https://www.instagram.com/reel/DILeg9-zQbw/?igsh=MXI5dG9iZ2MwZDBvbQ==");}
+function link_37(){window.open("https://www.instagram.com/reel/DHBX6l-zdx-/?igsh=MXNqa2Z1YmZkcWg4MQ==");}
+function link_38(){window.open("https://www.instagram.com/reel/DF1d1UJvyR1/?igsh=MTNwajlvc3d0c2FsMg==");}
+function link_39(){window.open("https://www.instagram.com/reel/DMMVkbVTatZ/?igsh=MTZucWR4a2ptMTMwaw==");}
+function link_40(){window.open("https://www.instagram.com/reel/DG23_s1vX5G/?igsh=MWpyMWY1eGF0cW03Ng==");}
+function linkA_1(){window.open("https://www.instagram.com/reel/DMDc48Hsc9T/?igsh=dm93cjRheGt2YXdy");}
+function linkA_2(){window.open("https://www.instagram.com/reel/DLWHTwVznIz/?igsh=MWl5eGU2dm40aGMxcw==");}
+function linkA_3(){window.open("https://www.instagram.com/reel/DKTX8cyMk5o/?igsh=MWgyZDB3Mm5zYTYxNA==");}
+
+  const barisList = document.querySelectorAll('.baris');
+  const penanda = document.getElementById('terakhir-baca');
+
+  barisList.forEach(baris => {
+    baris.addEventListener('click', () => {
+      const valueBaris = baris.getAttribute('value');
+      localStorage.setItem('terakhirDibaca', valueBaris);
+      tandaiBaris(valueBaris);
+    });
+  });
+
+  function tandaiBaris(nilai) {
+    barisList.forEach(b => {
+      if (b.getAttribute('value') === nilai) {
+        b.classList.add('terakhir');
+      } else {
+        b.classList.remove('terakhir');
+      }
+    });
+    penanda.textContent = nilai;
+  }
+
+  // Saat halaman dimuat, ambil nilai terakhir dari localStorage
+  window.addEventListener('DOMContentLoaded', () => {
+    const terakhir = localStorage.getItem('terakhirDibaca');
+    if (terakhir) {
+      tandaiBaris(terakhir);
+    }
+  });
+
+
+
+function openPage(pageName,elmnt,color) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].style.backgroundColor = "";
+  }
+  document.getElementById(pageName).style.display = "block";
+  elmnt.style.backgroundColor = color;
+}
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+
+/* ===== KONSTANTA ===== */
+const months=["JANUARI","FEBRUARI","MARET","APRIL","MEI","JUNI","JULI","AGUSTUS","SEPTEMBER","OKTOBER","NOVEMBER","DESEMBER"];
+const days=["Sen","Sel","Rab","Kam","Jum","Sab","Ming"];
+
+/* ===== EVENT BAWAAN (DIKEMBALIKAN) ===== */
+
+const events={
+ "1-1-2026": [{text:"Tahun Baru 2026 Masehi",time:null}],
+"16-1-2026": [{text:"Isra Mikraj Nabi Muhammad S.A.W.",time:null}],
+"16-2-2026": [{text:"Tahun Baru Imlek ",time:null}],
+"17-2-2026": [{text:"Tahun Baru Imlek ",time:null}],
+"18-3-2026": [{text:"Hari Suci Nyepi",time:null}],
+"19-3-2026": [{text:"Hari Suci Nyepi (Tahun Baru Saka 1948)",time:null}],
+"20-3-2026": [{text:"Idulfitri 1447 Hijriah",time:null}],
+"21-3-2026": [{text:"Idulfitri 1447 Hijriah",time:null}],
+"22-3-2026": [{text:"Idulfitri 1447 Hijriah",time:null}],
+"23-3-2026": [{text:"Idulfitri 1447 Hijriah",time:null}],
+"24-3-2026": [{text:"Idulfitri 1447 Hijriah",time:null}],
+"3-4-2026": [{text:"Wafat Yesus Kristus",time:null}],
+"5-4-2026": [{text:"Kebangkitan Yesus Kristus (Paskah)",time:null}],
+"1-5-2026": [{text:"Hari Buruh Internasional",time:null}],
+"14-5-2026": [{text:"Kenaikan Yesus Kristus",time:null}],
+"15-5-2026": [{text:"Kenaikan Yesus Kristus",time:null}],
+"27-5-2026": [{text:"Iduladha 1447 Hijriah",time:null}],
+"28-5-2026": [{text:"Iduladha 1447 Hijriah",time:null}],
+"31-5-2026": [{text:"Hari Raya Waisak 2570 BE",time:null}],
+"1-6-2026": [{text:"Hari Lahir Pancasila",time:null}],
+"16-6-2026": [{text:"Tahun Baru Islam 1448 Hijriah",time:null}],
+"17-8-2026": [{text:"Proklamasi Kemerdekaan",time:null}],
+"25-8-2026": [{text:"Maulid Nabi Muhammad S.A.W",time:null}],
+"25-12-2026": [{text:"Kelahiran Yesus Kristus",time:null}],
+"26-12-2026": [{text:"Kelahiran Yesus Kristus",time:null}]
+
+};
+
+/* ===== EVENT USER ===== */
+let userEvents=JSON.parse(localStorage.getItem("userEvents")||"{}");
+let fired=JSON.parse(localStorage.getItem("firedReminders")||"{}");
+
+let today=new Date();
+let currentMonth=today.getMonth();
+let currentYear=today.getFullYear();
+let selectedDay=today.getDate();
+
+/* ===== UTIL ===== */
+const keyOf=(d,m,y)=>`${d}-${m}-${y}`;
+const saveUser=()=>localStorage.setItem("userEvents",JSON.stringify(userEvents));
+
+function getMergedEvents(){
+  const merged=JSON.parse(JSON.stringify(events));
+  for(const k in userEvents){
+    if(merged[k]) merged[k]=merged[k].concat(userEvents[k]);
+    else merged[k]=userEvents[k];
+  }
+  return merged;
+}
+
+/* ===== KALENDER ===== */
+function buildCalendar(){
+  const allEvents=getMergedEvents();
+  const c=document.getElementById("calendarContainer");
+  c.innerHTML="";
+  document.getElementById("monthName").textContent=months[currentMonth]+" "+currentYear;
+
+  const h=document.createElement("div");h.className="days";
+  days.forEach(d=>{const e=document.createElement("div");e.className="day-header";e.textContent=d;h.appendChild(e)});
+  c.appendChild(h);
+
+  const g=document.createElement("div");g.className="days";
+  let first=new Date(currentYear,currentMonth,1).getDay();
+  first=first===0?6:first-1;
+  for(let i=0;i<first;i++)g.appendChild(document.createElement("div"));
+
+  const total=new Date(currentYear,currentMonth+1,0).getDate();
+  for(let d=1;d<=total;d++){
+    const el=document.createElement("div");
+    el.className="day";el.textContent=d;
+    if(allEvents[keyOf(d,currentMonth+1,currentYear)])el.classList.add("event-day");
+    if(d===today.getDate()&&currentMonth===today.getMonth()&&currentYear===today.getFullYear())el.classList.add("today");
+    el.onclick=()=>showEvent(d);
+    g.appendChild(el);
+  }
+  c.appendChild(g);
+}
+
+/* ===== EVENT ===== */
+function showEvent(d){
+  selectedDay=d;
+  const key=keyOf(d,currentMonth+1,currentYear);
+  const list=document.getElementById("eventList");
+  document.getElementById("eventTitle").textContent=
+    `Event ${d} ${months[currentMonth]} ${currentYear}`;
+  document.getElementById("eventForm").classList.add("hidden");
+  list.innerHTML="";
+
+  const ev=getMergedEvents()[key];
+  if(!ev){list.innerHTML="<i>Tidak ada event</i>";return;}
+
+  ev.forEach((e,i)=>{
+    const div=document.createElement("div");
+    div.className="event-item";
+    div.innerHTML=`
+      ${e.text}${e.time?`<br><small>⏰ ${e.time}</small>`:""}
+      ${userEvents[key]?`<button class="delete-btn" onclick="deleteEvent(${i})">🗑</button>`:""}
+    `;
+    list.appendChild(div);
+  });
+}
+
+/* ===== FORM ===== */
+function toggleForm(){
+  document.getElementById("eventForm").classList.toggle("hidden");
+}
+
+function addEvent(){
+  const text=eventText.value.trim();
+  const time=eventTime.value||null;
+  if(!text)return;
+
+  const key=keyOf(selectedDay,currentMonth+1,currentYear);
+  if(!userEvents[key])userEvents[key]=[];
+  userEvents[key].push({text,time});
+  saveUser();
+
+  eventText.value="";eventTime.value="";
+  document.getElementById("eventForm").classList.add("hidden");
+  buildCalendar();showEvent(selectedDay);
+}
+
+function deleteEvent(index){
+  const key=keyOf(selectedDay,currentMonth+1,currentYear);
+  if(!userEvents[key])return;
+  if(!confirm("Hapus event ini?"))return;
+
+  userEvents[key].splice(index,1);
+  if(userEvents[key].length===0)delete userEvents[key];
+  saveUser();
+  buildCalendar();showEvent(selectedDay);
+}
+
+/* ===== REMINDER JAM ===== */
+if("Notification"in window) Notification.requestPermission();
+
+setInterval(()=>{
+  if(Notification.permission!=="granted")return;
+  const now=new Date();
+  const key=keyOf(now.getDate(),now.getMonth()+1,now.getFullYear());
+  const ev=getMergedEvents()[key];
+  if(!ev)return;
+
+  ev.forEach((e,i)=>{
+    if(!e.time)return;
+    const id=key+"-"+i;
+    const [h,m]=e.time.split(":");
+    if(now.getHours()==h && now.getMinutes()==m && !fired[id]){
+      new Notification("⏰ Reminder Event",{body:e.text});
+      fired[id]=true;
+      localStorage.setItem("firedReminders",JSON.stringify(fired));
+    }
+  });
+},30000);
+
+/* ===== NAV ===== */
+function prevMonth(){currentMonth>0?currentMonth--:(currentMonth=11,currentYear--);buildCalendar();}
+function nextMonth(){currentMonth<11?currentMonth++:(currentMonth=0,currentYear++);buildCalendar();}
+
+buildCalendar();
+showEvent(today.getDate());
+
+
+
+
+const addBtn = document.querySelector("#addBtn"); 
+const main = document.querySelector("#main"); 
+
+// Click event listener 
+addBtn.addEventListener("click", function () { 
+	addNote(); 
+}); 
+
+// Save button function 
+const saveNotes = () => { 
+
+	// Select content textareas 
+	const notes = 
+		document.querySelectorAll(".note .content"); 
+		
+	// Select title textareas 
+	const titles = 
+		document.querySelectorAll(".note .title"); 
+
+	const data = []; 
+
+	notes.forEach((note, index) => { 
+		const content = note.value; 
+		const title = titles[index].value; 
+		console.log(title); 
+		if (content.trim() !== "") { 
+			data.push({ title, content }); 
+		} 
+	}); 
+
+	const titlesData = 
+		data.map((item) => item.title); 
+	console.log(titlesData); 
+	localStorage.setItem( 
+		"titles", JSON.stringify(titlesData)); 
+
+	const contentData = 
+		data.map((item) => item.content); 
+	localStorage.setItem( 
+		"notes", JSON.stringify(contentData)); 
+}; 
+
+// Addnote button function 
+const addNote = (text = "", title = "") => { 
+	const note = document.createElement("div"); 
+	note.classList.add("note"); 
+	note.innerHTML = ` 
+	<div class="icons"style="text-align: center;"> 
+		<button class="save fas fa-save"
+			style="background:#4caf50;cursor: pointer;font-family: 'Poppins',sans-serif;">Save
+		</button> 
+		<button class="trash fas fa-trash"
+			style="background:#0d6efd;color:black;cursor: pointer;font-family: 'Poppins',sans-serif;">Delete
+		</button> 
+	</div> 
+	<div class="title-div"> 
+		<textarea class="title"
+			placeholder="Judul...">${title}</textarea> 
+	</div> 
+	<textarea class="content"
+		placeholder="Note...">${text}</textarea> 
+	`; 
+	function handleTrashClick() { 
+		note.remove(); 
+		saveNotes(); 
+	} 
+	function handleSaveClick() { 
+		saveNotes(); 
+	} 
+	const delBtn = note.querySelector(".trash"); 
+	const saveButton = note.querySelector(".save"); 
+	const textareas = note.querySelectorAll("textarea"); 
+
+	delBtn.addEventListener("click", handleTrashClick); 
+	saveButton.addEventListener("click", handleSaveClick); 
+	main.appendChild(note); 
+	saveNotes(); 
+}; 
+
+// Loading all the notes those are saved in 
+// the localstorage 
+function loadNotes() { 
+
+	const titlesData = 
+		JSON.parse(localStorage.getItem("titles")) || []; 
+	const contentData = 
+		JSON.parse(localStorage.getItem("notes")) || []; 
+		
+	for (let i = 0; 
+			i < Math.max( 
+				titlesData.length, contentData.length); i++) { 
+		addNote(contentData[i], titlesData[i]); 
+	} 
+} 
+loadNotes();
+
+
+</script>
+</body>
+</html>
