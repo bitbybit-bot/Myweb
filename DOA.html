@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kumpulan Doa</title>
+
+<style>
+:root{
+  --bg:#f4f6f8;
+  --card:#ffffff;
+  --primary:#0f766e;
+  --soft:#e6f4f1;
+  --text:#1f2937;
+}
+
+body.dark{
+  --bg:#0f172a;
+  --card:#1e293b;
+  --soft:#134e4a;
+  --text:#e5e7eb;
+}
+
+*{
+  box-sizing:border-box;
+  font-family:'Poppins',system-ui,sans-serif;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* HEADER */
+.header{
+  background:var(--primary);
+  color:white;
+  padding:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.toggle{
+  background:rgba(255,255,255,.2);
+  border:none;
+  color:white;
+  padding:6px 10px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* PAGE */
+.page{display:none;padding:14px;}
+.page.active{display:block;}
+
+/* SEARCH */
+.search{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  margin-bottom:12px;
+}
+
+/* LIST CARD */
+.list-card{
+  background:var(--card);
+  padding:10px 12px;
+  border-radius:12px;
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
+  cursor:pointer;
+}
+
+.list-left{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.num{
+  font-size:12px;
+  color:var(--primary);
+  font-weight:600;
+  width:22px;
+}
+
+.title{
+  font-size:13px;
+}
+
+.check{
+  width:20px;
+  height:20px;
+  border-radius:6px;
+  border:2px solid #9ca3af;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:13px;
+  color:white;
+  cursor:pointer;
+  flex-shrink:0;
+}
+
+.check.done{
+  background:#22c55e;
+  border-color:#22c55e;
+}
+/* DETAIL */
+.detail-card{
+  background:var(--card);
+  padding:16px;
+  border-radius:16px;
+  box-shadow:0 6px 18px rgba(0,0,0,.06);
+}
+
+.detail-title{
+  text-align:center;
+  font-weight:600;
+  color:var(--primary);
+  margin-bottom:12px;
+}
+
+.arab{
+  direction:rtl;
+  text-align:right;
+  font-size:26px;
+  line-height:1.9;
+  margin-bottom:12px;
+}
+
+.latin{
+  font-style:italic;
+  font-size:14px;
+  margin-bottom:10px;
+}
+
+.arti{
+  font-size:14px;
+}
+
+.btn{
+  width:100%;
+  margin-top:16px;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:var(--primary);
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div>📿 Kumpulan Doa</div>
+  <button class="toggle" onclick="toggleDark()">🌙</button>
+</div>
+
+<!-- HOME -->
+<div id="home" class="page active">
+  <input class="search" placeholder="Cari doa..." oninput="renderList(this.value)">
+  <div id="list"></div>
+</div>
+
+<!-- DETAIL -->
+<div id="detail" class="page">
+  <div class="detail-card">
+    <div class="detail-title" id="d-title"></div>
+    <div class="arab" id="d-arab"></div>
+    <div class="latin" id="d-latin"></div>
+    <div class="arti" id="d-arti"></div>
+    <button class="btn" onclick="goHome()">← Kembali ke Daftar</button>
+  </div>
+</div>
+
+<script>
+const doaData = [
+  {title:"Doa mohon ampun saat sujud",
+arab:"اَللّٰهُمَّ اغْفِرْ لِيْ ذَنْبِيْ كُلَّهُ ، دِقَّهُ وَجِلَّهُ ، وَأَوَّلَهُ وَآخِرَهُ ، وَعَلَانِيَتَهُ وَسِرَّهُ.",
+latin:"Allāhumma-ghfir lī dhambī kullah, diqqahū wa jillah, wa awwalahū wa ākhirah, wa ʿalāniyatahū wa sirrah.",
+arti:"O Allah, forgive for me all of my sins: the minor and major, the first and the last, the public and the private."},
+
+{title:"Doa nabi saat kesusahan",
+arab:"لاَ إِلَهَ إِلاَّ اللهُ الْعَظِيمُ الْحَلِيمُ لاَ إِلَهَ إِلاَّ اللهُ رَبُّ الْعَرْشِ الْعَظِيمِ لاَ إِلَهَ إِلاَّ اللهُ رَبُّ السَّمَاوَاتِ وَرَبُّ الأَرْضِ وَرَبُّ الْعَرْشِ الْكَرِيممِ",
+latin:"La Ilaha Illallahul adzimul halim, la ilaha illallah rabbul arsyil adzim, la ilaha illallahu rabbus samawati wa rabbul ardhi rabbul arsyil karim.",
+arti:"Tiada tuhan yang patut disembah selain Allah Yang Mahaagung lagi Maha Penyayang. Tiada tuhan yang patut disembah selain Allah Pemilik ‘Arsy yang agung. Tiada tuhan yang patut disembah selain Allah Pencipta Langit, Pencipta Bumi, Pemilik ‘Arsy yang mulia."},
+
+{title:"Doa keluar rumah",
+arab:"اللَّهُمَّ إنِّي أَعُوذ بِكَ أَنْ أَضِلَّ أَوْ أُضَلَّ، أَوْ أَزِلَّ أَوْ أُزَلَّ، أَوْ أَظْلِمَ أَوْ أُظْلَمَ، أَوْ أَجْهَلَ أَوْ يُجْهَلَ عليَّ ",
+latin:"Allahumma inni a’udzu bika an adhilla aw udholla, aw azilla aw uzalla, aw azhlima aw uzhlama, aw ajhala aw yujhala ‘alayya",
+arti:"Ya Allah, aku berlindung kepada-Mu dari kesesatan diriku atau disesatkan orang lain, dari ketergelinciran diriku atau digelincirkan orang lain, dari menzholimi diriku atau dizholimi orang lain, dan dari kebodohan diriku atau dibodohkan orang lain"},
+
+{title:"Doa Rasulullah",
+arab:"اَللّٰهُمَّ إِنَّا نَسْأَلُكَ مِنْ خَيْرِ مَا سَأَلَكَ مِنْهُ نَبِيُّكَ مُحَمَّدٌ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ ، وَنَعُوْذُ بِكَ مِنْ شَرِّ مَا اسْتَعَاذَ مِنْهُ نَبِيُّكَ مُحَمَّدٌ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ ، وَأَنْتَ الْمُسْتَعَانُ ، وَعَلَيْكَ الْبَلَاغُ ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ.",
+latin:"Allāhumma innā nas’aluka min khayri mā sa’alaka minhu Nabiyyuka Muḥammadun ṣallā-llāhu ʿalayhi wa sallam, wa naʿūdhu bika min sharri ma-staʿādha minhu Nabiyyuka Muḥammadun ṣallā-llāhu ʿalayhi wa sallam, wa Anta-l-Mustaʿān, wa ʿalayka-l-balāgh, wa lā ḥawla wa lā quwwata illā bi-llāh.",
+arti:"O Allah, we beg You for the good which Your Prophet Muhammad ﷺ asked from You. We seek Your protection from the evil which Your Prophet Muhammad ﷺ sought protection for from You. You are the One whose assistance is sought and You are the Only One who provides and suffices. There is no power (to avert evil) nor strength (to do good) except by Allah."},
+
+{title:"Doa Pembuka Ijabah",
+arab:"اَللَّهُمَّ إِنِّي أَسْأَلُكَ بِأَنِّي أَشْهَدُ أَنَّكَ أَنْتَ اللهُ لَا إِلَهَ إِلَّا أَنْتَ الأَحَدُ الصَّمَدُ الَّذِي لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ",
+latin:"Allahumma inni as'aluka bi anni asyhadu annaka antallahu, la ilaha illa antal ahadus shomad, alladzi lam yalid wa lam yulad, wa lam yakullahu kufuwan ahad.",
+arti:"Tuhanku, aku memohon (pertolongan) kepada-Mu. Aku bersaksi bahwa Engkau adalah Allah. Tiada tuhan selain Engkau Yang Maha Esa, tempat bergantung yang tiada melahirkan dan tiada dilahirkan, serta tiada apapun yang menyamai-Nya."},
+
+{title:"Doa Tetap dalam Ketaatan",
+arab:"اللَّهُمَّ مُصَرِّفَ الْقُلُوبِ صَرِّفْ قُلُوبَنَا عَلَى طَاعَتِكَ",
+latin:"ALLAHUMMA MUSHORRIFAL QULUUB SHORRIF QULUUBANAA ‘ALA THO’ATIK",
+arti:"Ya Allah, Dzat yang memalingkan hati, palingkanlah hati kami kepada ketaatan beribadah kepada-Mu."},
+
+{title:"Doa mohon kemudahan",
+arab:"اللَّهُمَّ لاَ سَهْلَ إِلَّا مَا جَعَلْتَهُ سَهْلاً ، وَ أَنْتَ تَجْعَلُ الْحُزْنَ إِذَا شِئْتَ سَهْلاً",
+latin:"Allahumma laa sahla illaa maa ja'altahu sahlan wa 'anta taj 'alil huzna 'idza syi'ta sahlan",
+arti:"Ya Allah, tiada satu kemudahan, melainkan jika Engkau jadikan mudah, dan dengan kehendak-Mu sesuatu yang sulit itu menjadi mudah."},
+
+{title:"Doa minta rezeki yang halal",
+arab:"اللَّهُمَّ اكْفِنِي بِحَلَالِكَ عَنْ حَرَامِكَ، وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاكَ",
+latin:"Allahumma ikfini bihalalika an haramika wa aghnini bifadhlika amman siwak",
+arti:"Ya Allah, cukupkanlah aku dengan yang halal sehingga aku tidak membutuhkan yang haram, dan cukupkanlah aku dengan karunia-Mu dari (bergantung kepada) selain-Mu. "},
+
+{title:"Doa berlindung dari hilangnya nikmat dan kesehatan",
+arab:"اللَّهُمَّ إِنِّى أَعُوذُ بِكَ مِنْ زَوَالِ نِعْمَتِكَ وَتَحَوُّلِ عَافِيَتِكَ وَفُجَاءَةِ نِقْمَتِكَ وَجَمِيعِ سَخَطِكَ",
+latin:"ALLOOHUMMA INNII A’UUDZU BIKA MIN ZAWAALI NI’MATIK, WA TAHAWWULI ‘AAFIYATIK, WA FUJAA’ATI NIQMATIK, WA JAMII’I SAKHOTHIK",
+arti:"Ya Allah, sesungguhnya aku berlindung kepada-Mu dari hilangnya kenikmatan yang telah Engkau berikan, dari berubahnya kesehatan yang telah Engkau anugerahkan, dari siksa-Mu yang datang secara tiba-tiba, dan dari segala kemurkaan-Mu "},
+
+{title:"Doa berlindung dari kemalasan",
+arab:" اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَأَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ، وَأَعُوذُ بِكَ مِنَ الْجُبْنِ وَالْبُخْلِ، وَأَعُوذُ بِكَ مِنْ غَلَبَةِ الدَّيْنِ، وَقَهْرِ الرِّجَالِ",
+latin:"Allâhumma innî a'ûdzu bika minal hammi wal hazan. Wa a'ûdzu bika minal 'ajzi wal kasal. Wa a'ûdzu bika minal jubni wal bukhl. Wa a'ûdzu bika min gholabatid daini wa qahrir rijâl.",
+arti:" Ya Allah, aku berlindung kepada-Mu dari kebingungan dan kesedihan, aku berlindung kepada-Mu dari kelemahan dan kemalasan, aku berlindung kepada-Mu dari ketakutan dan kekikiran, aku berlindung kepada-Mu dari lilitan utang dan tekanan orang-orang."},
+
+{title:"Doa Berangkat dari Rumah",
+arab:"بِسْمِ اللهِ تَوَكَّلْتُ عَلَى اللهِ وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ",
+latin:"Bismillâhi tawakkaltu ‘alallâhi wa lâ ḫaula wa lâ quwwata illâ billâhil ‘aliyyil ‘adhîm",
+arti:"Dengan nama Allah, aku bertawakal kepada Allah. Tidak ada daya dan kekuatan kecuali dengan (pertolongan) Allah."},
+
+{title:"Doa Setelah Duduk dalam Kendaraan",
+arab:"بِسْمِ اللّٰهِ مَجْرٰ۪ىهَا وَمُرْسٰىهَاۗ اِنَّ رَبِّيْ لَغَفُوْرٌ رَّحِيْمٌ",
+latin:"bismillâhi majrehâ wa mursâhâ, inna rabbî laghafûrur raḫîm",
+arti:"Dengan (menyebut) nama Allah pada waktu berlayar dan berlabuhnya. Sesungguhnya Tuhanku Maha Pengampun, Maha Penyayang (QS Hud: 41)."},
+
+{title:"Doa ketika Kendaraan Mulai Bergerak",
+arab:"ببِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ . اَللهُ أَكْبَرُ اَللهُ أَكْبَرُ اَللهُ أَكْبَرُ. سُبْحَانَ الَّذِيْسَخَّرَلَنَا هٰذَا وَ مَا كُنَّا لَهٗ مُقْرِنِيْنَ . وَ إِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُوْنٌَ",
+latin:"Bimillâhir-raḫmânir-raḫîm. Allâhu akbar, Allâhu akbar, Allâhu akbar.Subhaanal-ladzii sakhkhara lanaa haadzaa wa maa kunnaa lahu muqrin- iina, wa innaa ilaa rabbinaa lamunqalibuun",
+arti:"Dengan menyebut nama Allah yang Maha Pengasih lagi Maha Penyayang. Allah Mahabesar. Allah Mahabesar. Allah Mahabesar.Maha Suci Tuhan yang telah menundukkan kendaraan ini untuk kami pada- hal kami sebelumnya tidak mampu menguasainya. Dan sesungguhnya kami akan kembali kepada Tuhan kami kelak di hari Kiamat. HR Ad-Darimi"},
+
+
+{title:"Doa ketika Tiba di Tempat Tujuan",
+arab:"اَللّٰهُمَّ إِنِّيْ أَسْأَلُكَ خَيْرَهَا وَخَيْرَ أَهْلِهَا وَخَيْرَ مَـــا فِيْهَا، وَأَعُوْذُ بِكَ مِنْ شَرِّهَا وَشَرِّ أَهْلِهَا وَشَرِّ مَـــا فِيْهَا",
+latin:"Allâhumma innî as-aluka khairahâ wa khaira ahlihâ wa khaira mâ fîhâ wa a‘ûzubika min syarrihâ wa syarri ahlihâ wa syarri mâ fîhâ",
+arti:"Ya Allah, aku memohon kepada-Mu kebaikan tempat ini dan kebaikan penduduknya serta kebaikan apa pun yang ada di dalamnya. Aku berlindung kepada-Mu dari kejahatan tempat ini dan kejahatan penduduknya serta kejahatan apa pun yang ada di dalamnya."},
+
+{title:"Niat Umra",
+arab:"لَبَّيْكَ اللَّهُمَّ عُمْرَةً",
+latin:"Labbaikallaahumma 'umroh",
+arti:"Aku sambut panggilan-Mu ya Allah untuk berumroh."},
+
+{title:"Doa Selesai Berihra",
+arab:"اَللّٰهُمَّ أُحَرِّمُ شَعْرِيْ وَبَشَرِيْ وَجَسَدِيْ وَجَمِيْعَ جَوَارِحِيْ مِنْ كُلِّ شَيْءٍ حَرَّمْتَهُ عَلَى الْمُحْرِمِ أَبْتَغِيْ بِذٰلِكَ وَجْهَكَ الْكَرِيْمَ يَا رَبَّ الْعَــالِمِيْنًَ",
+latin:"Allâhumma uḫarrimu sya‘rî wa basyarî wa jasadî wa jamî‘a jawâriḫî min kulli syai-in ḫarramtahu ‘alâl muḫrimi abtaghî bidzâlika wajhakal karîma yâ rabbal ‘âlamîn",
+arti:"Ya Allah aku mengharamkan rambut, kulit, tubuh, dan seluruh anggota tubuhku dari semua yang Kauharamkan bagi seorang yang sedang berihram, demi mengharapkan ridha-Mu semata, wahai Tuhan pemelihara seluruh keberadaan."},
+
+{title:"Lafal Talbiya",
+arab:"لَبَّيْكَ اللّٰهُمَّ لَبَّيْكَ، لَبَّيْكَ لَا شَرِيْكَ لَكَ لَبَّيْكَ، إِنَّ الْحَمْدَ وَالنِّعْمَةَ لَكَ وَالْمُلْكَ لَا شَرِيْكَ لَكَ",
+latin:"Labbaika-llâhumma labbaîk, labbaika lâ syarîka laka labbaîk. Innal ḫamda wan ni‘mata laka wal mulk. Lâ syarîka lak",
+arti:"Aku datang memenuhi panggilan-Mu, ya Allah. Aku datang memenuhi panggilan-Mu. Aku datang memenuhi panggilan-Mu. Tiada sekutu bagi-Mu. Aku datang memenuhi panggilan-Mu. Sungguh, segala puji, nikmat, dan segala kekuasaan adalah milik-Mu. Tiada sekutu bagi-Mu."},
+
+{title:"Doa Memasuki Kota Makka",
+arab:"اَللّٰهُمَّ هٰذَا حَرَمُكَ وَأَمْنُكَ فَحَرِّمْ لَحْمِيْ وَدَمِيْ وَشَعْرِيْ وَبَشَرِيْ عَلَى النَّارِ وَاٰمِنِّـيْ مِنْ عَذَابِكَ يَوْمَ تَبْعَثُ عِبَادَكَ وَاجْعَلْنِيْ مِنْ أَوْلِيَائِكَ وَأَهْلِ طَاعَتِكَ",
+latin:"Allâhumma hâdzâ ḫaramuka wa amnuka faḫarrim laḫmî wa damî wa sya‘rî wa basyarî ‘alan-nâri wa âminnî min ‘adzâbika yauma tab’atsu ‘ibadaka waj‘alnî min auliyâ-ika wa ahli thâ‘atika",
+arti:"Ya Allah, ini adalah tanah haram-Mu dan tempat aman-Mu. Haramkanlah dagingku, darahku, rambutku, dan kulitku dari api neraka. Selamatkanlah aku dari siksa-Mu pada hari ketika Engkau membangkitkan hamba-hamba-Mu. Jadikan aku termasuk di antara kekasih-Mu dan hamba-hamba yang taat pada-Mu."},
+
+{title:"Doa Masuk Masjidil Hara",
+arab:"اَللّٰهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ فَحَيِّنَا رَبَّنَا بِالسَّلَامِ وَأَدْخِلْنَا الْجَنَّةَ دَارَالسَّلَامِ تَبَارَكْتَ وَتَعَالَيْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ. اَللّٰهُمَّ افْتَحْ لِيْ أَبْوَابَ رَحْمَتِكَ وَمَغْفِرَتِكَ وَأَدْخِلْنِيْ فِيْهَا. بِسْمِ اللهِ وَالْحَمْدُ ِللّٰهِ وَالصَّلَاةُ وَالسَّلَامُ عَلٰى رَسُوْلِ اللهِ",
+latin:"Allâhumma antassalâm, waminkas-salâm fahayyinâ rabbanâ bissalâm wa adkhilnal jannata dâras-salâm tabârakta wata‘âlaita yâ dzaljalâli wal ikrâm. Allâhumma-ftaḫ lî abwâba raḫmatika wamaghfiratika wa adkhilnî fîhâ. Bismillâhi walḫamdulillahi wash-shalâtu wassalâmu ‘alâ rasûlillâh",
+arti:"Ya Allah Engkaulah Dzat yang memberi keselamatan (kesejahteraan), dari-Mu keselamatan datang, maka hidupkanlah kami ya Allah dengan selamat (sejahtera), masukkan kami ke dalam surga rumah keselamatan. Mahasuci Engkau, Mahaluhur Engkau, wahai Tuhan sang pemulik keagungan dan kemuliaan. Ya Allah bukakanlah untukku pintu rahmat dan ampunan-Mu. Masukanlah aku ke dalam rahmat dan ampunan-Mu itu. Dengan nama Allah. Segala puji bagi Allah. Semoga rahmat dan keselamatan terlimpah untuk Rasulullah."},
+
+{title:"Doa ketika Melihat Ka’bah",
+arab:"اَللّٰهُمَّ زِدْ هٰذَا الْبَيْتَ تَشْرِيْفًا وَتَعْظِيْمًا وَتَكْرِيمًا وَمَهَابَةً وَزِدْ مَنْ شَرّفَهُ وَكَرّمَهُ مِمَّنْ حَجَّهُ أَوِاعْتَمَرَهُ تَشْرِيفًا وَتَكْرِيمًا وَتَعْظِيمًا وَبِرًّا",
+latin:"Allâhumma zid hâdzal baita tasyrîfan wa ta‘dhîman wa takrîman wa maḫâbatan wa zid man syarafahu wa karramahu mim man ḫajjahu awi‘tamarahu tasyrîfan wa ta‘dhîman wa takrîman wa birran",
+arti:"Ya Allah, tambahkanlah kemuliaan, kehormatan, keagungan dan kehebatan pada Baitullah ini; dan tambahkanlah pula kepada orang-orang yang memuliakan, menghormati, dan mengagungkannya di antara mereka yang berhaji atau yang berumrah kemuliaan, kehormatan, kebesaran, dan kebaikan."},
+
+{title:"Doa Tawaf Dari Hajar Aswad ke Rukun Yamani",
+arab:"سُبْحَانَ اللهِ وَالْحَمْدُ لِلّٰهِ وَلَا إِلٰهَ إِلَّا اللهُ وَاللهُ أَكْبَرُ. وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ الْعَلِيِّ الْعَظِيْم",
+latin:"Subḫânallâhi walḫamdulillâhi wa lâ ilâha illallâhu allâhu akbar. wa lâ haula wa lâ quwwata illâ billâhil ‘aliyyil ‘adhîm",
+arti:"Mahasuci Allah. Segala pujian hanya pantas disanjungkan kepada Allah. Tiada Tuhan selain Allah. Allah Mahabesar. Tidak ada daya dan kekuatan kecuali (pertolongan) dari Allah yang Mahaluhur lagi Mahaagung."},
+
+{title:"Doa Tawaf Dari Rukun Yamani ke Hajar Aswad",
+arab:"رَبَّنَا اٰتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْاٰخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+latin:"Rabbanâ âtinaa fid dun-yâ ḫasanah, wa fil âkhirati ḫasanah, wa qinâ a‘dzâban nâr",
+arti:"Wahai Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat dan hindarkanlah kami dari siksa neraka."},
+
+{title:"Doa Sa’i",
+arab:"اَللهُ أَكْبَرُ، اَللهُ أَكْبَرُ، اَللهُ أَكْبَرُ، اَللهُ أَكْبَرُ، كَبِيْرًا وَالْحَمْدُ لِلّٰهِ كَثِيرًا وَسُبْحَانَ اللهِ بُكْرَةً وَأَصِيْلًا",
+latin:"Allâhu akbar, allâhu akbar, allâhu akbar, allâhu akbar, kabîran walḫamdulillâhi katsîran wa subḫanallâhi bukratan wa ashîlâ",
+arti:"Allah Mahabesar, Allah Mahabesar, Allah Mahabesar, Allah Mahabesar, Mahabesar Allah segala puji bagi-Nya, Mahasuci Allah baik saat pagi maupun petang."},
+
+{title:"Doa Menggunting Rambut",
+arab:"اَللّٰهُمَّ اثْبُتْ لِيْ بِكُلِّ شَعْرَةٍ حَسَنَةً وَامْحُ عَنِّيْ بِهَا سَيِّئَةً وَارْفَعْ لِيْ عِنْدَكَ دَرَجَةً",
+latin:"Allâhumma-tsbut lî bi kuli sya’ratin ḫasanatan wa-mḫu ‘annî bihâ sayyi-atan wa-rfa‘ lî ‘indaka darajatan",
+arti:"Ya Allah, tetapkanlah kebaikan untukku lantaran setiap helai rambut ini, hapuslah keburukan dari diriku lantaran rambut ini, dan angkatlah derajatku di sisi-Mu."},
+
+{title:"Doa ketika Masuk Arafah",
+arab:"اَللّٰهُمَّ إِلَيْكَ تَوَجَّهْتُ، وَبِكَ اعْتَصَمْتُ، وَعَلَيْكَ تَوَكَّلْتُ. اَللّٰهُمَّ اجْعَلْنِيْ مِمَّنْ تُبَاهِيْ بِهِ الْيَوْمَ مَلَائِكَتَكَ، إِنَّكَ عَلَى كُلِّ شَيْءٍ قَدِيْرٌ",
+latin:"Allâhumma ilaika tawajjahtu, wabika‘tashamtu, wa’alaika tawakkaltu. Allâhummaj’alnî mim-man tubaahî bihil yauma malâ-ikataka, innaka ‘alâ kulli syai-in qadîrun",
+arti:"Ya Allah, hanya kepada-Mulah aku menghadap, dengan-Mulah aku berpegang teguh, pada-Mulah aku berserah diri. Ya Allah, jadikanlah aku menjadi bagian dari orang yang hari ini Engkau banggakan di hadapan Malaikat-Mu. Sesungguhnya Engkau Mahakuasa atas segala sesuatu."},
+
+{title:"Doa ketika Sampai di Muzdalifah",
+arab:"اَللّٰهُمَّ إِنَّ هٰذِهِ مُزْدَلِفَةُ جُمِعَتْ فِيْهَا أَلْسِنَةٌ مُخْتَلِفَةٌ تَسْأَلُكَ حَوَائِجَ مُتَنَوِّعَةً فَاجْعَلْنِيْ مِمَّنْ دَعَاكَ فَاسْتَجَبْتَ لَهُ وَتَوَكَّلَ عَلَيْكَ فَكَفَّيْتَهُ يَا أَرْحَمَ الرَّاحِمِيْنَ",
+latin:"Allâhumma inna hâdzihi muzdalifatu jumi‘at fîhâ alsinatun mukhtalifatun, tas’aluka hawâija mutanawwi‘atan faj’alnî mimman da‘âka fastajabta lahu wa tawakkala ‘alaika fakaffaitahu yâ arḫamar râḫimîn",
+arti:"Ya Allah, sesungguhnya di Muzdalifah ini telah berkumpul bermacam-macam bahasa yang memohon kepada-Mu berbagai hajat yang beraneka ragam. Maka, masukkanlah aku ke dalam golongan orang yang berdoa lalu Engkau kabulkan, golongan orang yang berserah diri pada-Mu lalu Engkau lindungi dia, wahai Tuhan yang Maha Pengasih dari segala yang pengasih."},
+
+{title:"Doa ketika Sampai di Mina",
+arab:"اَللّٰهُمَّ هٰذَا مِنَى فَامْنُنْ عَلَيَّ بِمَا مَنَنْتَ بِهِ عَلَى أَوْلِيَائِكَ وَأَهْلِ طَاعَتِكَ",
+latin:"Allâhumma hadzâ minâ famnun ‘alayya bimâ mananta bihi ‘alâ awliyâika wa ahli thâ‘atika",
+arti:"Ya Allah, tempat ini adalah di Mina, anugerahkanlah kepadaku apa yang Engkau telah anugerahkan kepada orang-orang yang selalu dekat dan taat kepada-Mu."},
+
+{title:"Doa Masuk Kota Madinah",
+arab:"اَللّٰهُمَّ هٰذَا حَرَمُ رَسُولِكَ وَاجْعَلْهُ لِيْ وِقَايَةً مِنَ النَّارِ وَأَمَانًا مِنَ الْعَذَابِ وَسُوْءِ الْحِسَابِ",
+latin:"Allâhumma hâdzâ ḫaramu rasûlika waj‘alhu lî wiqâyatan minan nâri wa amânan minal ‘adzâbi wa sû-il ḫisâb",
+arti:"Ya Allah, negeri ini adalah tanah haram rasul-Mu. Jadikanlah ia penjaga bagiku dari neraka, pengaman dari siksa dan buruknya perhitungan amal."},
+
+{title:"Doa Masuk Masjid Nabawi",
+arab:"بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ. أَعُوْذُ بِاللهِ الْعَظِيمِ وَوَجْهِ الْكَرِيمِ وَسُلْطَانِهِ الْقَدِيْمِ مِنَ الشَّيْطَانِ الرَّجِيمِ. اَللّٰهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ",
+latin:"Bismillahir raḫmânir rahîm. A‘ûdzubillâhil ‘adhîmi wa wajhil karîmi wa sulthânihil qadîmi minasy syaithânir rajîmi, allâhumma-ftaḫlî abwâba raḫmatika",
+arti:"Dengan menyebut nama Allah Yang Maha Pengasih dan Maha Penyayang. Aku berlindung kepada Allah yang Mahaagung, Dzat-Nya yang Mahamulia, dan kekuasaan-Nya Yang Mahadahulu, dari godaan setan yang terkutuk. Ya Allah, bukakanlah bagiku segala pintu rahmat-Mu."},
+
+{title:"Doa ketika Pulang Haji/Umrah",
+arab:"لَا إِلٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، اٰيِبُوْنَ تَائِبُوْنَ عَابِدُوْنَ سَاجِدُوْنَ لِرَبِّنَا حَامِدُوْنَ صَدَقَ اللهُ وَعْدَهُ وَنَصَرَ عَبْدَهُ وَهَزَمَ الْأَحْزَابَ وَحْدَهُ",
+latin:"Lâ ilâha illallâhu waḫdahu lâ syarîkalahu lahul mulku wa lahul ḫamdu wahuwa ‘alâ kulli syai-in qadîr(un), âyibûn tâibûn ‘âbidûn sâjidûna li rabbinâ ḫâmidûn shadaqallâhu wa‘dahu wa nashara ‘abdahu wa hazamal aḫzâba waḫdahu",
+arti:"Tidak ada Tuhan kecuali Allah, Tuhan yang Esa, tidak ada sekutu bagi-Nya. Dia pemilik seluruh kerajaan dan segala pujian. Dia Mahakuasa atas segala sesuatu. Semoga kami termasuk orang-orang yang kembali, orang-orang yang ahli taubat, ahli ibadah, ahli sujud dan ahli memuji Tuhan kami. Allah menepati janji-Nya, menolong hamba-Nya, dan mengalahkan sendiri musuh-musuh -Nya."},
+
+{title:"Doa Minum Air Zamzam",
+arab:"اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا وَرِزْقًا وَاسِعًا وَشِفَاءً مِنْ كُلِّ دَاءٍ وَسَقَمٍ بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ",
+latin:"Allahumma inni as-aluka 'ilman naafi'an, wa rizqan waasi'an, wa syifaa-an min kulli daa-in wa saqamin birahmatika yaa arhamar-raahimiin",
+arti:"Ya Allah, sesungguhnya aku memohon kepada-Mu ilmu yang bermanfaat, rezeki yang luas, dan kesembuhan dari segala penyakit dengan rahmat-Mu, wahai dzat yang Maha Pengasih lagi Maha Penyayang."},
+
+{title:"Niat Tayamum",
+arab:"نَوَيْتُ التَّيَمُّمَ لِاسْتِبَاحَةِ الصَّلَاةِ للهِ تَعَالَى",
+latin:"Nawaitut tayammuma lisstibaahatish shalaati fardlol lillaahi ta’aalaa",
+arti:"Aku berniat tayamum agar diperbolehkan sholat karena Allah Ta’ala."},
+
+
+];
+
+let hafal = JSON.parse(localStorage.getItem("hafal")) || [];
+let dark = localStorage.getItem("dark") === "1";
+
+if(dark) document.body.classList.add("dark");
+
+function renderList(filter = "") {
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  doaData
+    .filter(d => d.title.toLowerCase().includes(filter.toLowerCase()))
+    .forEach((d, i) => {
+
+      // CARD
+      const card = document.createElement("div");
+      card.className = "list-card";
+      card.onclick = () => openDetail(i);
+
+      // KIRI (nomor + judul)
+      const left = document.createElement("div");
+      left.className = "list-left";
+      left.innerHTML = `
+        <div class="num">${i + 1}</div>
+        <div class="title">${d.title}</div>
+      `;
+
+      // CENTANG (DEFAULT KOSONG)
+      const check = document.createElement("div");
+      check.className = "check";     // ← TIDAK ada "done"
+      check.innerHTML = "";          // ← KOSONG
+
+      // Kalau sebelumnya sudah dihafal (dari localStorage)
+      if (hafal.includes(i)) {
+        check.classList.add("done");
+        check.innerHTML = "✓";
+      }
+
+      check.onclick = function (e) {
+        e.stopPropagation(); // jangan buka detail
+        toggleHafal(i);
+      };
+
+      // GABUNG
+      card.appendChild(left);
+      card.appendChild(check);
+      list.appendChild(card);
+    });
+}
+function toggleHafal(i){
+  if(hafal.includes(i)){
+    hafal = hafal.filter(x => x !== i);
+  } else {
+    hafal.push(i);
+  }
+  localStorage.setItem("hafal", JSON.stringify(hafal));
+  renderList(document.querySelector(".search").value);
+}
+function openDetail(i){
+  document.getElementById("home").classList.remove("active");
+  document.getElementById("detail").classList.add("active");
+
+  document.getElementById("d-title").innerText=doaData[i].title;
+  document.getElementById("d-arab").innerText=doaData[i].arab;
+  document.getElementById("d-latin").innerText=doaData[i].latin;
+  document.getElementById("d-arti").innerText=doaData[i].arti;
+
+  if(!hafal.includes(i)){
+    hafal.push(i);
+    localStorage.setItem("hafal",JSON.stringify(hafal));
+  }
+}
+
+function goHome(){
+  document.getElementById("detail").classList.remove("active");
+  document.getElementById("home").classList.add("active");
+  renderList();
+}
+
+function toggleDark(){
+  document.body.classList.toggle("dark");
+  localStorage.setItem("dark",document.body.classList.contains("dark")?"1":"0");
+}
+
+renderList();
+</script>
+
+</body>
+</html>

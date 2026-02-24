@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Link Manager</title>
+
+<style>
+:root{
+  --bg:#f3f4f6;--card:#fff;--text:#1f2937;
+  --primary:#4f46e5;--danger:#ef4444;--soft:#e5e7eb;
+}
+body.dark{
+  --bg:#0f172a;--card:#1e293b;--text:#e5e7eb;--soft:#334155;
+}
+*{box-sizing:border-box;font-family:system-ui,sans-serif}
+body{margin:0;background:var(--bg);color:var(--text)}
+
+.header{
+  display:flex;justify-content:space-between;
+  padding:14px;background:var(--primary);color:#fff;
+}
+.header button{
+  border:none;background:rgba(255,255,255,.2);
+  color:white;padding:6px 10px;border-radius:8px;
+}
+
+.search-box{padding:12px}
+.search{
+  width:100%;padding:10px;border-radius:10px;border:1px solid #ccc
+}
+
+#list{max-width:600px;margin:auto;padding:0 12px 90px}
+
+.card{
+  background:var(--card);padding:12px 14px;
+  border-radius:14px;margin-top:10px;
+  display:flex;justify-content:space-between;
+  align-items:center;cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+.card:hover{background:var(--soft)}
+.title{font-size:14px;font-weight:600}
+
+.delete{
+  border:none;background:var(--danger);
+  color:white;padding:6px 10px;
+  border-radius:8px;font-size:13px;
+}
+
+.add{
+  position:fixed;bottom:20px;right:20px;
+  width:56px;height:56px;border-radius:50%;
+  border:none;font-size:26px;
+  background:var(--primary);color:white;
+}
+
+.modal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.4);
+  display:none;align-items:center;justify-content:center;
+}
+.modal-content{
+  background:var(--card);padding:16px;
+  border-radius:14px;width:90%;max-width:400px;
+}
+.modal-content input{
+  width:100%;padding:10px;margin-top:10px;
+  border-radius:8px;border:1px solid #ccc;
+}
+.modal-content button{
+  margin-top:12px;width:100%;
+  padding:10px;border:none;border-radius:8px;
+  background:var(--primary);color:white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div>📌 Daftar Link</div>
+  <button onclick="toggleDark()">🌙</button>
+</div>
+
+<div class="search-box">
+  <input class="search" placeholder="Cari link..." oninput="render(this.value)">
+</div>
+
+<div id="list"></div>
+<button class="add" onclick="openModal()">+</button>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3>Tambah Link</h3>
+    <input id="title" placeholder="Judul">
+    <input id="url" placeholder="https://">
+    <button onclick="addLink()">Simpan</button>
+  </div>
+</div>
+
+<script>
+// ========================
+// 🔥 ISI LINK BANYAK DI SINI
+// ========================
+// ========================
+// 🔥 BULK LINK (SEED)
+// ========================
+const BULK_LINKS = [
+[" Cara Tayammum","https://www.youtube.com/watch?v=U29UnCmyl0U"],
+[" Cara Wudhu Hemat Air","https://www.youtube.com/shorts/UZc8NvSmfZA"],
+[" Tips Menggunakan Toilet Pesawat","https://www.instagram.com/reel/DIkRvn4By7F/?igsh=MWdnNmFoZHAzbmdk"],
+[" Tips Menggunakan Toilet Pesawat2","https://www.instagram.com/reel/DLuZjPqvf6u/?igsh=dzVwM3N3aTY1dHBt"],
+[" Tips Memakai Kain Ihram","https://www.instagram.com/reel/DI2gDs8zN3f/?igsh=ZjVmdnBqaHptY2Jz"],
+[" Tips Menjaga Wudhu","https://www.instagram.com/reel/DJ1UYxsBLS4/?igsh=MTIxemVudXVsdGtldQ=="],
+[" Tempat Wudhu Pria Dekat Kakbah","https://www.instagram.com/reel/DI97DprhYFM/?igsh=eHMxd3owNDNhM2lx"],
+[" Tempat Wudhu Wanita Dekat Kakbah","https://www.instagram.com/reel/DJWbN9aBaOR/?igsh=bnpyNWZncW1saHo1"],
+[" Tips Jadwal di Masjidil Haram","https://www.instagram.com/reel/DE_zq5jSTAy/?igsh=MXVuMzRlcXd3YjBqNQ=="],
+[" Rukun Umroh, Wajib Umroh, Sunah Umroh, Larangan Umroh","https://www.instagram.com/reel/DLOxTnavFnX/?igsh=OWJydGQwamFsaWcw"],
+[" Cara Memakai Sorban","https://www.instagram.com/reel/DG7Ycoqy8TS/?igsh=MWM5azZkMDdrNHVxdw=="],
+[" Tips Doa di Masjidil Haram","https://www.instagram.com/reel/DIceupezKfb/?igsh=MWN4ZzFldDVvcmd0ZQ=="],
+[" Tips Barang Bawaan Umroh Pria","https://www.instagram.com/reel/DFkYcHUS7gT/?igsh=YmZmcWo4ajl3OHNs"],
+[" Tata Cara Pelaksanaan Umroh","https://www.instagram.com/p/DLSRCixzqGd/?igsh=MWVweG9kbXg5ampjZQ=="],
+[" Tips Doa di Roudhoh","https://www.instagram.com/reel/DIYfTEJBl_u/?igsh=MWZqN29qdzlxYXpsag=="],
+[" Tips Membedakan Air Zamzam di Masjid Nabawi","https://www.instagram.com/reel/DIERPZozine/?igsh=djNjYmZ4d3EwZjFs"],
+[" Tips Tak Lupa Jumlah Putaran Tawaf","https://www.instagram.com/reel/DGUCGRMz9Kc/?igsh=eHZzbHBhYjF4dGdr"],
+[" Tips Doa Di Depan Kakbah","https://www.instagram.com/reel/DHdw_k-TABC/?igsh=MWdhb2ZqdzkyN3c2bw=="],
+[" Tips Sebelum Berangkat Umroh","https://www.instagram.com/reel/DKt0O1mT9sf/?igsh=MXMxdnlvY3RveGpyOQ=="],
+[" Salam Di Makam Rasululloh","https://www.instagram.com/reel/DH9_BiASUnB/?igsh=bTVyY2VmcXIwYWZj"],
+[" Cara Masuk Roudhoh Menggunakan Aplikasi Nusuk","https://www.instagram.com/reel/DMBLsexIwvn/?igsh=cTJ1ZGN3OTJiZDRn"],
+[" Tips Saat Tersesat di Masjidil Haram","https://www.instagram.com/reel/DJ3i6wnIXVS/?igsh=MTdmZm93ODA0NGJwbA=="],
+[" Manasik Umroh","https://www.youtube.com/watch?v=Ygmlb0clqMU&pp=ygUgbWFuYXNpayB1bXJvaCB1c3RhZHogYWJkdWwgc29tYWQ%3D"],
+[" Yasin 41","https://www.instagram.com/reel/DGSF9xrRVyC/?igsh=MXhjZnIxbGxmdXQ5dg=="],
+[" Doa diantara 2 pilar hijau sai","https://www.instagram.com/reel/DG0SjB_BrwD/?igsh=MWdpMHpsNmVsYXRkaw=="],
+[" Doa yang lebih baik dihapal","https://www.instagram.com/reel/DIdWgl5SnKE/?igsh=MWp0NHNmaWh3ZG9xeg=="],
+[" Doa agar diundang ke Baitullah","https://www.instagram.com/reel/DITwXkpTLtq/?igsh=MTF4Y2x3N3I2czk0"],
+[" Video Klip Syair bagus","https://www.instagram.com/reel/DL4SqW_vI5b/?igsh=czYwMjAyZDZsNHA5"],
+[" Video Klip Nasehat","https://www.instagram.com/reel/DJ6Fs2TPXBT/?igsh=ZHg4czdsbDNwOTlk"],
+[" Doa Ketika Kesusahan","https://www.instagram.com/reel/DJmOPT1z10L/?igsh=anFkY2tiNXpuZHZo"],
+[" Sholat Taubat","https://www.instagram.com/reel/DJWXA4IyM_q/?igsh=bHdjNjB5N204emNi"],
+[" Tasbih Malaikat","https://www.instagram.com/reel/DGJQzHdTvyi/?igsh=aTB2dTV4MzYydHV1"],
+[" Doa kemarin besok dan masa depan","https://www.instagram.com/reel/DG2_O_7Shke/?igsh=cW85Zm53dHpxcTl2"],
+[" Tips Mengganti Sholat yang pernah dilewatkan","https://www.instagram.com/reel/DHnumBII1xT/?igsh=YmZzc25zenZ2ZW9x"],
+[" Jenis Panggilan Shalat Jenazah","https://www.instagram.com/reel/DLtYv9JTcdg/?igsh=MW5qeXVuZjY1MzY1NQ=="],
+[" Saat menghadapi perkara sulit","https://www.instagram.com/reel/DILeg9-zQbw/?igsh=MXI5dG9iZ2MwZDBvbQ=="],
+[" Doa Agar Cepat Paham","https://www.instagram.com/reel/DHBX6l-zdx-/?igsh=MXNqa2Z1YmZkcWg4MQ=="],
+[" Doa Agar Jasad Tidak Membusuk","https://www.instagram.com/reel/DF1d1UJvyR1/?igsh=MTNwajlvc3d0c2FsMg=="],
+[" Urutan Memotong Kuku","https://www.instagram.com/reel/DMMVkbVTatZ/?igsh=MTZucWR4a2ptMTMwaw=="],
+[" Tips Apabila ada Hujan Malam Jumat/Jumat","https://www.instagram.com/reel/DG23_s1vX5G/?igsh=MWpyMWY1eGF0cW03Ng=="],
+[" Tips Melipat Pakaian","https://www.instagram.com/reel/DMDc48Hsc9T/?igsh=dm93cjRheGt2YXdy"],
+[" Tips Tali Temali","https://www.instagram.com/reel/DLWHTwVznIz/?igsh=MWl5eGU2dm40aGMxcw=="],
+[" Tips Tali Temali2","https://www.instagram.com/reel/DKTX8cyMk5o/?igsh=MWgyZDB3Mm5zYTYxNA=="],
+];
+
+// ========================
+// AMBIL DATA LAMA
+// ========================
+let links = JSON.parse(localStorage.getItem("links")) || [];
+
+// ========================
+// MERGE TANPA DUPLIKASI
+// ========================
+let updated = false;
+
+BULK_LINKS.forEach(([title, url]) => {
+  const exists = links.some(l => l.url === url);
+  if (!exists) {
+    links.push({ title, url });
+    updated = true;
+  }
+});
+
+if (updated) {
+  localStorage.setItem("links", JSON.stringify(links));
+}
+// ========================
+let dark=localStorage.getItem("dark")==="1";
+if(dark)document.body.classList.add("dark");
+
+function render(filter=""){
+  list.innerHTML="";
+  links.filter(l=>l.title.toLowerCase().includes(filter.toLowerCase()))
+  .forEach((l,i)=>{
+    const c=document.createElement("div");
+    c.className="card";
+    c.onclick=()=>window.open(l.url,"_blank");
+
+    const t=document.createElement("div");
+    t.className="title";t.innerText=l.title;
+
+    const d=document.createElement("button");
+    d.className="delete";d.innerText="Hapus";
+    d.onclick=e=>{e.stopPropagation();remove(i)};
+
+    c.append(t,d);list.appendChild(c);
+  });
+}
+
+function addLink(){
+  const t=title.value.trim(),u=url.value.trim();
+  if(!t||!u)return alert("Lengkapi data");
+  links.push({title:t,url:u});
+  save();closeModal();
+}
+function remove(i){
+  if(confirm("Hapus link?")){links.splice(i,1);save()}
+}
+function save(){
+  localStorage.setItem("links",JSON.stringify(links));
+  render(document.querySelector(".search").value);
+}
+function toggleDark(){
+  document.body.classList.toggle("dark");
+  localStorage.setItem("dark",document.body.classList.contains("dark")?"1":"0");
+}
+function openModal(){modal.style.display="flex"}
+function closeModal(){modal.style.display="none"}
+
+render();
+</script>
+
+</body>
+</html>
