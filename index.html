@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalender Modern 2025</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    body{
+      overscroll-behavior-y: contain;
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(180deg,#eef2ff,#f3f4f6);
+      background-size:cover;
+      background-position:center;
+      background-attachment:fixed;
+      color:var(--text);
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+    }
+
+    :root{
+      --primary:#4f46e5;
+      --secondary:#22c55e;
+      --bg:#f3f4f6;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --radius:18px;
+    }
+
+    /* Spinner overlay */
+    #loading-spinner {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: whitesmoke;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      left: 0px;
+      top: 0px;
+    }
+
+    /* Spinner animasi */
+    .spinner {
+      border: 8px solid grey;
+      border-top: 8px solid black;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    /* Animasi putaran */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Sembunyikan spinner setelah halaman dimuat */
+    body.loaded #loading-spinner {
+      display: none;
+    }
+
+
+
+
+
+
+    
+#main { 
+	width: 100%; 
+	min-height: 100vh; 
+	padding-bottom: 50px; 
+	background-color: white; 
+	display: flex; 
+	flex-wrap: wrap; 
+} 
+
+#addBtn { 
+	position: absolute; 
+	left: 0px; 
+	top: 59px; 
+	background-color: #2d3436; 
+	color: white; 
+	padding: 3px; 
+	border: 0; 
+	outline: 0; 
+	border-radius: 5px; 
+	font-family: 'Poppins',sans-serif;
+} 
+
+.btn { 
+	display: flex; 
+	justify-content: center; 
+	align-items: center; 
+	background-color: #81ecec; 
+	margin-top: 0px; 
+} 
+
+.note { 
+	width: 330px; 
+	height: 250px; 
+	background-color: white; 
+	margin: 15px; 
+	margin-top: 40px; 
+	border-radius: 10px; 
+	margin-bottom: 30px; 
+} 
+
+.icons { 
+  width: 100%;
+  background-color: black;
+  color: black;
+  padding: 5px;
+  justify-content: start;
+  border-radius: 10px 10px 0px 0px;
+  grid-template-columns: repeat(2, 2fr);
+  display: grid;
+} 
+
+.icons i { 
+	padding: 0px; 
+	cursor: pointer; 
+} 
+
+.note textarea { 
+border: none;
+  width: 97%;
+  height: 87%;
+  resize: none;
+  padding: 10px;
+  font-size: 18px;
+  background-color: #ffe082;
+  border-radius: 0px 0px 10px 10px;
+  font-family: 'Poppins',sans-serif;
+} 
+
+.title-div textarea { 
+border-radius: 10px 10px 0px 0px;
+  background: #f3f6fb;
+  font-weight: bolder;
+  height: 20px;
+  width: 97%;
+  text-align: center;
+  font-family: 'Poppins',sans-serif;
+} 
+
+.heading { 
+	position: fixed; 
+	margin-top: 46px; 
+	color: ivory; 
+} 
+
+.note textarea:focus { 
+	border: 0; 
+	outline: 0; 
+}
+    
+a, a:visited, a:hover, a:active {
+  color: inherit; /* atau tentukan warna spesifik, misalnya 'black' */
+  text-decoration: none;
+}
+
+
+
+    /* Then style the iframe to fit in the container div with full height and width */
+    .responsive-iframe {
+  width: 100%;
+  height: calc(100vh - 100px);
+  border: none;
+    }
+
+
+
+
+
+    /* HEADER */
+    .header{
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:rgba(255,255,255,.85);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid #e5e7eb;
+    }
+    .header-inner{
+      max-width:1200px;
+      margin:auto;
+      padding:14px 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .brand{
+      font-weight:700;
+      color:var(--primary);
+      font-size:1.1rem;
+    }
+
+ 
+.wrapper{max-width:1200px;margin:auto;padding:20px}
+.grid{display:grid;grid-template-columns:380px 1fr;gap:20px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+  padding:20px
+}
+.cal-header{display:flex;justify-content:space-between;align-items:center}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px}
+.day-header{text-align:center;font-size:.75rem;font-weight:600;color:var(--muted)}
+.day{
+  text-align:center;padding:10px 0;border-radius:10px;
+  cursor:pointer;transition:.2s
+}
+.day:hover{background:#eef2ff}
+.today{background:var(--secondary);color:#fff;font-weight:600}
+.event-day{background:var(--primary);color:#fff;font-weight:600}
+
+.event-item{
+  background:#f9fafb;border-left:4px solid var(--primary);
+  padding:12px;border-radius:10px;margin-bottom:10px;
+  position:relative;font-size:.9rem
+}
+.delete-btn{
+  position:absolute;top:8px;right:8px;
+  background:#ef4444;color:#fff;
+  border:none;border-radius:6px;
+  padding:4px 6px;font-size:12px;cursor:pointer
+}
+textarea,input[type=time]{
+  width:100%;padding:10px;border-radius:10px;
+  border:1px solid #e5e7eb;margin-top:6px
+}
+button{cursor:pointer;border:none;border-radius:10px;padding:10px}
+.btn-plus{
+  width:48px;height:48px;border-radius:50%;
+  background:var(--primary);color:#fff;font-size:24px
+}
+.btn-save{
+  background:var(--secondary);color:#fff;width:100%;margin-top:8px
+}
+.hidden{display:none}
+
+
+
+
+/* === Header Scroll === */
+.header-scroll {
+position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  background: black;      /* warna header */
+  padding: 10px;
+  z-index: 1000;
+  scrollbar-width: thin;
+}
+
+/* sembunyikan scrollbar (opsional) */
+.header-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.header-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.5);
+  border-radius: 4px;
+}
+
+/* tombol di dalam header */
+.header-scroll button {
+flex: 0 0 auto;
+  background: #eae6df;
+  color: black;
+  border: none;
+  border-radius: 10px;
+  margin-right: 15px;
+  padding: 7px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+font-family: 'Poppins',sans-serif;
+}
+
+.header-scroll button:hover {
+  background: black;
+  color: white;
+}
+
+/* === Konten Utama === */
+main {
+  padding: 20px;
+}
+
+.tabcontent {
+display: none;
+
+}
+
+    .baris {
+    }
+    .terakhir {
+      background-color: black;
+      color: white;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="loading-spinner">
+    <div class="spinner"></div>
+    <p>Please Wait....</p>
+  </div>
+
+
+<div class="header-scroll">
+  <button class="tablink" onclick="openPage('Calender', this,)" id="defaultOpen">Home</button>
+  <button class="tablink" onclick="openPage('Jadwal', this, )">Sholat</button>
+  <button class="tablink" onclick="openPage('Cerpen', this, )">Cerpen</button>
+  <button class="tablink" onclick="openPage('Quis', this, )">Quisis</button>
+  <button class="tablink" onclick="openPage('NOTE', this, )">Note</button>
+  <button class="tablink" onclick="openPage('Alquran', this, )">Al Quran</button>
+  <button class="tablink" onclick="openPage('Doa', this, )">Doa</button>
+  <button class="tablink" onclick="openPage('VIDEO', this, )">Video</button>
+  <button class="tablink" onclick="openPage('GAME', this, )">Game</button>
+</div>
+
+
+<br><br>
+
+<div id="Calender" class="tabcontent">
+
+<div class="wrapper">
+<div class="grid">
+
+<!-- KALENDER -->
+<div class="card">
+  <div class="cal-header">
+    <button onclick="prevMonth()">❮</button>
+    <b id="monthName"></b>
+    <button onclick="nextMonth()">❯</button>
+  </div>
+  <div id="calendarContainer"></div>
+</div>
+
+<!-- EVENT -->
+<div class="card">
+  <b id="eventTitle">Detail Event</b>
+  <div id="eventList"></div>
+
+  <div style="margin-top:10px">
+    <button class="btn-plus" onclick="toggleForm()">+</button>
+  </div>
+
+  <div id="eventForm" class="hidden">
+    <textarea id="eventText" placeholder="Nama event..."></textarea>
+    <input type="time" id="eventTime">
+    <button class="btn-save" onclick="addEvent()">Simpan</button>
+  </div>
+</div>
+
+</div>
+</div>
+
+
+</div>
+
+
+<div id="NOTE" class="tabcontent" style="display: block;font-size: small";>
+	<div class="btn"> 
+		<button id="addBtn"> 
+			<i class="fas fa-plus"></i> 
+			Add Note 
+		</button> 
+	</div> 
+	<div id="main"> 
+
+	</div> 
+</div>
+
+
+<div id="Alquran" class="tabcontent" style="display: block;font-size: small";>
+<iframe class="responsive-iframe" src="QURANOFFLINE.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+
+
+
+
+
+
+<div id="Doa" class="tabcontent" style="display: block;font-size: small";>
+<iframe class="responsive-iframe" src="DOA.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+
+<div id="VIDEO" class="tabcontent" style="display: block;font-size: small";>
+<iframe class="responsive-iframe" src="links.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+
+<div id="GAME" class="tabcontent">
+ <button class="tablink" onclick="openPage('GAME1', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">1. Game Umrah</button>
+ <button class="tablink" onclick="openPage('GAME2', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">2. Game Zhafran</button>
+ <button class="tablink" onclick="openPage('GAME3', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">3. Game Angka</button>
+ <button class="tablink" onclick="openPage('GAME4', this, ) "style="border: none;width: 100%;padding: 5px;font-family: 'Poppins',sans-serif;">4. Map Interaktif</button>
+</div>
+
+<div id="GAME1" class="tabcontent">
+<iframe class="responsive-iframe" src="game umrah.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+<div id="GAME2" class="tabcontent">
+<iframe class="responsive-iframe" src="Web.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+<div id="GAME3" class="tabcontent">
+<iframe class="responsive-iframe" src="Angka.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+<div id="GAME4" class="tabcontent">
+<iframe class="responsive-iframe" src="MAP.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+
+<div id="Jadwal" class="tabcontent">
+<iframe class="responsive-iframe" src="jadwal.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+<div id="Cerpen" class="tabcontent">
+<iframe class="responsive-iframe" src="baca.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+<div id="Quis" class="tabcontent">
+<iframe class="responsive-iframe" src="quisis.html" frameborder="0"  allowfullscreen title=""></iframe>
+</div>
+
+
+
+<script>
+
+    // Saat semua resource halaman dimuat
+    window.addEventListener('load', function () {
+      document.body.classList.add('loaded');
+    });
+
+function openPage(pageName,elmnt,color) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].style.backgroundColor = "";
+  }
+  document.getElementById(pageName).style.display = "block";
+  elmnt.style.backgroundColor = color;
+}
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+
+/* ===== KONSTANTA ===== */
+const months=["JANUARI","FEBRUARI","MARET","APRIL","MEI","JUNI","JULI","AGUSTUS","SEPTEMBER","OKTOBER","NOVEMBER","DESEMBER"];
+const days=["Sen","Sel","Rab","Kam","Jum","Sab","Ming"];
+
+/* ===== EVENT BAWAAN (DIKEMBALIKAN) ===== */
+
+const events={
+ "1-1-2026": [{text:"Tahun Baru 2026 Masehi",time:null}],
+"16-1-2026": [{text:"Isra Mikraj Nabi Muhammad S.A.W.",time:null}],
+"16-2-2026": [{text:"Tahun Baru Imlek ",time:null}],
+"17-2-2026": [{text:"Tahun Baru Imlek ",time:null}],
+"18-3-2026": [{text:"Hari Suci Nyepi",time:null}],
+"19-3-2026": [{text:"Hari Suci Nyepi (Tahun Baru Saka 1948)",time:null}],
+"20-3-2026": [{text:"Idulfitri 1447 Hijriah",time:null}],
+"21-3-2026": [{text:"Idulfitri 1447 Hijriah",time:null}],
+"22-3-2026": [{text:"Idulfitri 1447 Hijriah",time:null}],
+"23-3-2026": [{text:"Idulfitri 1447 Hijriah",time:null}],
+"24-3-2026": [{text:"Idulfitri 1447 Hijriah",time:null}],
+"3-4-2026": [{text:"Wafat Yesus Kristus",time:null}],
+"5-4-2026": [{text:"Kebangkitan Yesus Kristus (Paskah)",time:null}],
+"1-5-2026": [{text:"Hari Buruh Internasional",time:null}],
+"14-5-2026": [{text:"Kenaikan Yesus Kristus",time:null}],
+"15-5-2026": [{text:"Kenaikan Yesus Kristus",time:null}],
+"27-5-2026": [{text:"Iduladha 1447 Hijriah",time:null}],
+"28-5-2026": [{text:"Iduladha 1447 Hijriah",time:null}],
+"31-5-2026": [{text:"Hari Raya Waisak 2570 BE",time:null}],
+"1-6-2026": [{text:"Hari Lahir Pancasila",time:null}],
+"16-6-2026": [{text:"Tahun Baru Islam 1448 Hijriah",time:null}],
+"17-8-2026": [{text:"Proklamasi Kemerdekaan",time:null}],
+"25-8-2026": [{text:"Maulid Nabi Muhammad S.A.W",time:null}],
+"25-12-2026": [{text:"Kelahiran Yesus Kristus",time:null}],
+"26-12-2026": [{text:"Kelahiran Yesus Kristus",time:null}]
+
+};
+
+/* ===== EVENT USER ===== */
+let userEvents=JSON.parse(localStorage.getItem("userEvents")||"{}");
+let fired=JSON.parse(localStorage.getItem("firedReminders")||"{}");
+
+let today=new Date();
+let currentMonth=today.getMonth();
+let currentYear=today.getFullYear();
+let selectedDay=today.getDate();
+
+/* ===== UTIL ===== */
+const keyOf=(d,m,y)=>`${d}-${m}-${y}`;
+const saveUser=()=>localStorage.setItem("userEvents",JSON.stringify(userEvents));
+
+function getMergedEvents(){
+  const merged=JSON.parse(JSON.stringify(events));
+  for(const k in userEvents){
+    if(merged[k]) merged[k]=merged[k].concat(userEvents[k]);
+    else merged[k]=userEvents[k];
+  }
+  return merged;
+}
+
+/* ===== KALENDER ===== */
+function buildCalendar(){
+  const allEvents=getMergedEvents();
+  const c=document.getElementById("calendarContainer");
+  c.innerHTML="";
+  document.getElementById("monthName").textContent=months[currentMonth]+" "+currentYear;
+
+  const h=document.createElement("div");h.className="days";
+  days.forEach(d=>{const e=document.createElement("div");e.className="day-header";e.textContent=d;h.appendChild(e)});
+  c.appendChild(h);
+
+  const g=document.createElement("div");g.className="days";
+  let first=new Date(currentYear,currentMonth,1).getDay();
+  first=first===0?6:first-1;
+  for(let i=0;i<first;i++)g.appendChild(document.createElement("div"));
+
+  const total=new Date(currentYear,currentMonth+1,0).getDate();
+  for(let d=1;d<=total;d++){
+    const el=document.createElement("div");
+    el.className="day";el.textContent=d;
+    if(allEvents[keyOf(d,currentMonth+1,currentYear)])el.classList.add("event-day");
+    if(d===today.getDate()&&currentMonth===today.getMonth()&&currentYear===today.getFullYear())el.classList.add("today");
+    el.onclick=()=>showEvent(d);
+    g.appendChild(el);
+  }
+  c.appendChild(g);
+}
+
+/* ===== EVENT ===== */
+function showEvent(d){
+  selectedDay=d;
+  const key=keyOf(d,currentMonth+1,currentYear);
+  const list=document.getElementById("eventList");
+  document.getElementById("eventTitle").textContent=
+    `Event ${d} ${months[currentMonth]} ${currentYear}`;
+  document.getElementById("eventForm").classList.add("hidden");
+  list.innerHTML="";
+
+  const ev=getMergedEvents()[key];
+  if(!ev){list.innerHTML="<i>Tidak ada event</i>";return;}
+
+  ev.forEach((e,i)=>{
+    const div=document.createElement("div");
+    div.className="event-item";
+    div.innerHTML=`
+      ${e.text}${e.time?`<br><small>⏰ ${e.time}</small>`:""}
+      ${userEvents[key]?`<button class="delete-btn" onclick="deleteEvent(${i})">🗑</button>`:""}
+    `;
+    list.appendChild(div);
+  });
+}
+
+/* ===== FORM ===== */
+function toggleForm(){
+  document.getElementById("eventForm").classList.toggle("hidden");
+}
+
+function addEvent(){
+  const text=eventText.value.trim();
+  const time=eventTime.value||null;
+  if(!text)return;
+
+  const key=keyOf(selectedDay,currentMonth+1,currentYear);
+  if(!userEvents[key])userEvents[key]=[];
+  userEvents[key].push({text,time});
+  saveUser();
+
+  eventText.value="";eventTime.value="";
+  document.getElementById("eventForm").classList.add("hidden");
+  buildCalendar();showEvent(selectedDay);
+}
+
+function deleteEvent(index){
+  const key=keyOf(selectedDay,currentMonth+1,currentYear);
+  if(!userEvents[key])return;
+  if(!confirm("Hapus event ini?"))return;
+
+  userEvents[key].splice(index,1);
+  if(userEvents[key].length===0)delete userEvents[key];
+  saveUser();
+  buildCalendar();showEvent(selectedDay);
+}
+
+/* ===== REMINDER JAM ===== */
+if("Notification"in window) Notification.requestPermission();
+
+setInterval(()=>{
+  if(Notification.permission!=="granted")return;
+  const now=new Date();
+  const key=keyOf(now.getDate(),now.getMonth()+1,now.getFullYear());
+  const ev=getMergedEvents()[key];
+  if(!ev)return;
+
+  ev.forEach((e,i)=>{
+    if(!e.time)return;
+    const id=key+"-"+i;
+    const [h,m]=e.time.split(":");
+    if(now.getHours()==h && now.getMinutes()==m && !fired[id]){
+      new Notification("⏰ Reminder Event",{body:e.text});
+      fired[id]=true;
+      localStorage.setItem("firedReminders",JSON.stringify(fired));
+    }
+  });
+},30000);
+
+/* ===== NAV ===== */
+function prevMonth(){currentMonth>0?currentMonth--:(currentMonth=11,currentYear--);buildCalendar();}
+function nextMonth(){currentMonth<11?currentMonth++:(currentMonth=0,currentYear++);buildCalendar();}
+
+buildCalendar();
+showEvent(today.getDate());
+
+
+
+
+const addBtn = document.querySelector("#addBtn"); 
+const main = document.querySelector("#main"); 
+
+// Click event listener 
+addBtn.addEventListener("click", function () { 
+	addNote(); 
+}); 
+
+// Save button function 
+const saveNotes = () => { 
+
+	// Select content textareas 
+	const notes = 
+		document.querySelectorAll(".note .content"); 
+		
+	// Select title textareas 
+	const titles = 
+		document.querySelectorAll(".note .title"); 
+
+	const data = []; 
+
+	notes.forEach((note, index) => { 
+		const content = note.value; 
+		const title = titles[index].value; 
+		console.log(title); 
+		if (content.trim() !== "") { 
+			data.push({ title, content }); 
+		} 
+	}); 
+
+	const titlesData = 
+		data.map((item) => item.title); 
+	console.log(titlesData); 
+	localStorage.setItem( 
+		"titles", JSON.stringify(titlesData)); 
+
+	const contentData = 
+		data.map((item) => item.content); 
+	localStorage.setItem( 
+		"notes", JSON.stringify(contentData)); 
+}; 
+
+// Addnote button function 
+const addNote = (text = "", title = "") => { 
+	const note = document.createElement("div"); 
+	note.classList.add("note"); 
+	note.innerHTML = ` 
+	<div class="icons"style="text-align: center;"> 
+		<button class="save fas fa-save"
+			style="background:#4caf50;cursor: pointer;font-family: 'Poppins',sans-serif;">Save
+		</button> 
+		<button class="trash fas fa-trash"
+			style="background:#0d6efd;color:black;cursor: pointer;font-family: 'Poppins',sans-serif;">Delete
+		</button> 
+	</div> 
+	<div class="title-div"> 
+		<textarea class="title"
+			placeholder="Judul...">${title}</textarea> 
+	</div> 
+	<textarea class="content"
+		placeholder="Note...">${text}</textarea> 
+	`; 
+	function handleTrashClick() { 
+		note.remove(); 
+		saveNotes(); 
+	} 
+	function handleSaveClick() { 
+		saveNotes(); 
+	} 
+	const delBtn = note.querySelector(".trash"); 
+	const saveButton = note.querySelector(".save"); 
+	const textareas = note.querySelectorAll("textarea"); 
+
+	delBtn.addEventListener("click", handleTrashClick); 
+	saveButton.addEventListener("click", handleSaveClick); 
+	main.appendChild(note); 
+	saveNotes(); 
+}; 
+
+// Loading all the notes those are saved in 
+// the localstorage 
+function loadNotes() { 
+
+	const titlesData = 
+		JSON.parse(localStorage.getItem("titles")) || []; 
+	const contentData = 
+		JSON.parse(localStorage.getItem("notes")) || []; 
+		
+	for (let i = 0; 
+			i < Math.max( 
+				titlesData.length, contentData.length); i++) { 
+		addNote(contentData[i], titlesData[i]); 
+	} 
+} 
+loadNotes();
+
+
+</script>
+</body>
+</html>
